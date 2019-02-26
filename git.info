@@ -18,3 +18,5 @@ git config [<tipo>] <variable> <valor>
 		--local : config dentro de INDEX
 		--global : archivo dentro del home del usuario logueado en SO
 		--system : config de todo el SO
+
+git log --oneline --graph --all
