@@ -1,0 +1,11 @@
+# Git basics
+
+WD Working Directory =>
+SD Stage Area => donde reflejamos los snapshots de cada archivo
+INDEX .git =>Repositorio
+La base de datos de git se separa en 4 tipos de objetos.
+
+- blob : son los archivos finales
+- tree : representan directorios
+- commit :  representan que trees y blobs hay en tu WD y que estado de cambiotiene cada uno
+- tag : representan "versiones"
