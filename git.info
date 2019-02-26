@@ -5,7 +5,16 @@ SD Stage Area => donde reflejamos los snapshots de cada archivo
 INDEX .git =>Repositorio
 La base de datos de git se separa en 4 tipos de objetos.
 
+SHA-1
+
 - blob : son los archivos finales
 - tree : representan directorios
 - commit :  representan que trees y blobs hay en tu WD y que estado de cambiotiene cada uno
 - tag : representan "versiones"
+
+git config [<tipo>] <variable> <valor>
+
+	-tipos:
+		--local : config dentro de INDEX
+		--global : archivo dentro del home del usuario logueado en SO
+		--system : config de todo el SO
