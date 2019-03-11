@@ -20,3 +20,7 @@ git config [<tipo>] <variable> <valor>
 		--system : config de todo el SO
 
 git log --oneline --graph --all
+
+
+Worldpackers
+Toptal
