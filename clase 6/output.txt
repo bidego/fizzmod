@@ -14,11 +14,9 @@ function consumirJson(res){
 </script>
 <!--<script src="http://jsonplaceholder.typicode.com/users?callback=consumirJson"></script>-->
 <script>
-
 let s = document.createElement("script")
 s.src = "http://jsonplaceholder.typicode.com/users?callback=consumirJson"
 document.body.appendChild(s)
-
 </script>
 </body>
 </html>

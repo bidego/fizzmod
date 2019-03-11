@@ -1,0 +1,8 @@
+.- volver a iniciar un servidor TCP
+.- identificar propiedades para capturar la direcćión ip y el puerto del socket
+.- establecer un nombre aleatorio para cada socket conectado al servidor
+.- guardar cada socket en un array de sockets
+.- mostrar un mensaje para todos los sockets cada vez que alguien se conecte
+.- identificar el evento de desconexión del socket y enviar un mensaje a todos los sockets notificando la desconexión
+.- eliminar el socket del array de sockets a notificar de lo contrario nos dará error en los próximos mensajes
+.- crear una función broadcast que envíe el mensaje recibido por el evento data a todos los sockets menos al que envía.
