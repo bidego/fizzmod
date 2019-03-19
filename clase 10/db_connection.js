@@ -15,7 +15,10 @@ const con = mysql.createConnection({
 
 const QUERY = {
     USERS: {
-        STATUS: "SELECT u.name, s.description FROM users u INNER JOIN statuses s ON u.id_status = s.id"
+        STATUS: "SELECT u.name, s.description FROM users u INNER JOIN statuses s ON u.id_status = s.id",
+        ADD: function(name,id_country) {
+            return `INSERT INTO users (name,id_country) VALUES (${name},${id_country})`;
+        }
     }
 }
 
