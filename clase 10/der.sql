@@ -7,13 +7,21 @@ CREATE TABLE countries (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE statuses (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  description varchar(50),
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE users (
   id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(50),
-  location varchar(50),
-  id_country int(11) not null,
+  id_country int(11) NOT NULL,
+  id_status int(11) NOT NULL default 2,
   PRIMARY KEY (id),
   CONSTRAINT user_country FOREIGN KEY(id_country) REFERENCES countries(id)
+  ON UPDATE cascade ON DELETE restrict,
+  CONSTRAINT user_status FOREIGN KEY(id_status) REFERENCES statuses(id)
   ON UPDATE cascade ON DELETE restrict
 );
 
@@ -31,7 +39,11 @@ CREATE TABLE messages (
 
 INSERT INTO countries (id, name) VALUES
 (1, 'Argentina'),
-(2, 'Usuguay');
+(2, 'Uruguay');
+
+INSERT INTO statuses (id, description) VALUES
+(1, 'OFFLINE'),
+(2, 'ONLINE');
 
 INSERT INTO users (id, name, id_country) VALUES
 (1, 'Pablo', 1),
