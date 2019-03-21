@@ -9,7 +9,7 @@
         ul {
             list-style: none;
         }
-        #chatview,#chatprofile {
+        #chatview,#chatprofile,#chatlogin {
             display:none;
         }
         #feedwindow {
@@ -19,35 +19,93 @@
         }
     </style>
     <script type="text/javascript">    
-        const socket = io("http://localhost:8080")
-        
+        const jQ = function(id) { return document.getElementById(id) }
+        const eL = function(el) { return document.createElement(el) }
+        const F = function(name) { return document.forms[name] }
+
+        const socket = io("http://localhost:8080")        
         socket.on("connect", function() {
             //socket.send('hi');
         })
         socket.on("user_in", () => {
-            console.log("saaa")
+            console.log("se conectó un")
         })
         socket.on("new_message", data => {
             console.log(data);
             digest(data.body.feed.from,data.body.feed.msg);
         })
         function digest(user,msg) {
-            let feed = document.createElement('li');
+            let feed = eL('li');
             feed.innerHTML = `${user}: ${msg}`;
-            document.getElementById("chatfeed").appendChild(feed);
+            jQ("chatfeed").appendChild(feed);
         }
+
+        const Scenes = {
+            LOGIN: 'chatlogin',
+            REGISTER: 'chatregister',
+            CHATFEED: 'chatview',
+            PROFILE: 'chatprofile'
+        }
+
         window.onload = function() {
-            document.getElementById("buttonGoProfile").addEventListener('click', ()=>{
-                document.getElementById("chatview").style.display = 'none';
-                document.getElementById("chatprofile").style.display = 'block';
+            
+            jQ("buttonGoProfile").addEventListener('click', ()=>{
+                jQ("chatview").style.display = 'none';
+                jQ("chatprofile").style.display = 'block';
             });
-            document.getElementById("buttonChat").addEventListener('click', submitFeed);
-            document.getElementById("buttonEnter").addEventListener('click', login);
-            document.getElementById("buttonEditProfile").addEventListener('click', editProfile);
+
+            jQ("buttonRegister").addEventListener('click', register);
+            jQ("goLogin").addEventListener('click', goLogin);
+            jQ("buttonChat").addEventListener('click', submitFeed);
+            jQ("buttonEnter").addEventListener('click', login);
+            jQ("buttonEditProfile").addEventListener('click', editProfile);
+
+            function goLogin() {
+                jQ("chatlogin").style.display = 'block';
+                jQ("chatregister").style.display = 'none';
+            }
             function login(event) {
                 event.preventDefault();
-                let user = document.forms['login'].user.value;
-                fetch('http://localhost:8080/?login='+user)
+                let data = { user: F('login').user.value }
+                fetch('http://localhost:8080/?login', {
+                    method: 'POST', body: JSON.stringify(data),
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(
+                    function(response) {
+                        if (response.status !== 200) {
+                            console.log(`NOT OK: ${response.status}`);
+                            return;
+                        }
+            
+                        jQ('chatlogin').style.display = "none";
+                        jQ('chatview').style.display = "block";
+            
+                        response.json().then(function(data) {
+                            console.log(data);
+                        });
+                    }
+                )
+                .catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
+            }
+            function register(event) {
+                event.preventDefault();
+                let input = F('register');
+                let data = { firstname: input.firstname.value,
+                    lastname: input.lastname.value,
+                    user: input.user.value,
+                    email: input.email.value
+                }
+                fetch('http://localhost:8080/?register', {
+                    method: 'POST', body: JSON.stringify(data),
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                })
                 .then(
                     function(response) {
                     if (response.status !== 200) {
@@ -56,8 +114,8 @@
                         return;
                     }
         
-                    document.getElementById('chatlogin').style.display = "none";
-                    document.getElementById('chatview').style.display = "block";
+                    jQ('chatregister').style.display = "none";
+                    jQ('chatview').style.display = "block";
         
                     // Examine the text in the response
                     response.json().then(function(data) {
@@ -71,35 +129,40 @@
             }
             function editProfile(event) {
                 event.preventDefault();
-                let user = document.forms['login'].user.value;
-                let firstname = document.forms['profile'].nombre.value;
-                let lastname = document.forms['profile'].apellido.value;
-                fetch('http://localhost:8080/?profile='+user+'%%'+firstname+'%%'+lastname)
+                let data = {
+                    user: F('login').user.value,
+                    firstname: F('profile').nombre.value,
+                    lastname: F('profile').apellido.value
+                }
+                fetch('http://localhost:8080/?profile', {
+                    method: 'POST', body: JSON.stringify(data),
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                })
                 .then(
                     function(response) {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' +
-                        response.status);
-                        return;
-                    }
-        
-                    document.getElementById('chatprofile').style.display = "none";
-                    document.getElementById('chatview').style.display = "block";
-        
-                    // Examine the text in the response
-                    response.json().then(function(data) {
-                        console.log(data);
-                    });
+                        if (response.status !== 200) {
+                            console.log(`NOT OK: ${response.status}`);
+                            return;
+                        }
+            
+                        jQ(Scenes.PROFILE).style.display = "none";
+                        jQ(Scenes.CHATFEED).style.display = "block";
+            
+                        response.json().then(function(data) {
+                            console.log(data);
+                        });
                     }
                 )
                 .catch(function(err) {
-                    console.log('Fetch Error :-S', err);
+                    console.log('Fetch Error :', err);
                 });
             }
             function submitFeed(event) {
                 event.preventDefault();
-                let user = document.forms['login'].user.value;
-                let msg = document.forms['messageform'].message.value
+                let user = F('login').user.value;
+                let msg = F('messageform').message.value
                 socket.emit("message",user,msg, function(data) {
                     console.log(data);
                 })
@@ -116,14 +179,36 @@
                 Usuario
             </label>
             <input name="user" type="text" maxlength="16"/>
-            <label for="password">
-                Clave
+            <label for="email">
+                Email
             </label>
-            <input name="password" type="password" />
+            <input name="email" type="text" maxlength="16"/>
             <button type="submit" form="login" id="buttonEnter">Entrar</button>
         </form>
     </container>
-    <container id="chatprofile">
+    <container id="chatregister">
+            <form action="/register" method="post" name="register" id="register">
+                <label for="firstname">
+                    Nombre
+                </label>
+                <input name="firstname" type="text" maxlength="16"/>
+                <label for="lastname">
+                    Apellido
+                </label>
+                <input name="lastname" type="text" maxlength="16"/>
+                <label for="user">
+                    Usuario
+                </label>
+                <input name="user" type="text" maxlength="16"/>
+                <label for="email">
+                    Email
+                </label>
+                <input name="email" type="text" maxlength="16"/>
+                <button type="submit" form="register" id="buttonRegister">Registrar</button>
+                <button type="button" form="login" id="goLogin">Login</button>
+            </form>
+        </container>
+        <container id="chatprofile">
         <form action="/profile" method="post" name="profile" id="profile">
             <label for="user">Usuario</label>
             <span></span>
