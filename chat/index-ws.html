@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Server con Socket</title>
+    <title>Chat App</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 </head>
 <body>
@@ -10,6 +10,8 @@
             list-style: none;
         }
         .view header {
+            width:100%;
+            text-align: center;
             display:block;
         }
         #container {
@@ -19,19 +21,21 @@
         }
         .view form {
             padding:20px;
-            padding:10px;
-            width: 370px;
+            width: 290px;
         }
         .view label {
+            width:90%;
             padding:20px;
-            display: inline-block;
+            display: block;
         }
         .view input {
+            margin-right:20px;
+            float:right;
         }
         .view {
+            display:block;
             margin:0 auto;
             position:relative;
-            display:flex;
             width: 310px;
             height: 500px;
             border: 1px solid #666;
@@ -218,17 +222,20 @@
         <container class="view" id="chatlogin">
             <header>
                 <h1>Chat</h1>
+                <h2>Login</h2>
             </header>
             <form action="/login" method="post" name="login" id="login">
+                <label for="email">
+                    Email
+                    <input name="email" type="text" maxlength="64"/>
+                </label>
                 <label for="user">
                     Usuario
                     <input name="user" type="text" maxlength="16"/>
                 </label>
-                <label for="email">
-                    Email
-                    <input name="email" type="text" maxlength="16"/>
+                <label for="actions">
+                    <button type="submit" form="login" id="buttonEnter">Entrar</button>
                 </label>
-                <button type="submit" form="login" id="buttonEnter">Entrar</button>
             </form>
         </container>
         <container class="view" id="chatregister">
@@ -260,7 +267,7 @@
         </container>
         <container class="view" id="chatprofile">
             <header>
-                <h1>Chat</h1>
+                <h2>Mi perfil</h2>
             </header>
             <form action="/profile" method="post" name="profile" id="profile">
                 <label for="user">Usuario</label>
