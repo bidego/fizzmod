@@ -1,14 +1,14 @@
-// npm install --save socket.io socket.io-client
 const http = require('http');
 
 const server = require('http').createServer(serverHandler)
 const io = require('socket.io')(server)
 const fs = require('fs')
 
-function serverHandler(req,res) {
+const { Status } = require('./status-enum')
 
-    middServices(req,res)
-    // End MIDD
+async function serverHandler(req,res) {
+
+    await middServices(req,res)
     
     let archivo = fs.createReadStream(__dirname+"/index-ws.html");
     res.writeHead(200,{
@@ -23,7 +23,7 @@ io.on("connection", socket => {
     socket.broadcast.emit("user_in", {status:"ok", payload:"Alguien se unio"});
     
     socket.on("login", (name,msg) => {
-        socket.broadcast.emit("new_message", {status:"ok",
+        socket.broadcast.emit("new_message", {status:Status.OK.message,
             body: {
                 feed: {
                     from: name,
@@ -34,7 +34,7 @@ io.on("connection", socket => {
     })
 
     socket.on("message", (name,msg) => {
-        socket.broadcast.emit("new_message", {status:"ok",
+        socket.broadcast.emit("new_message", {status:Status.OK.message,
             body: {
                 feed: {
                     from: name,
@@ -72,7 +72,7 @@ function parseModule(req) {
 }
 
 const middServices =
-    (req,res) => {
+    async (req,res) => {
         let data = [];
         req.on("data", chunk => {
             data.push(chunk);
@@ -114,16 +114,16 @@ const middServices =
                 let httpreq = http.request(options,  res => {
                     let buffers = [];
                     let reject = (err) => {
-                        console.error(err); 
+                        console.error(`${res.statusCode}: ${res.statusMessage}`); 
                     }
                     let resolve = (data) => {
-                        console.log(data);
+                        console.log(`${res.statusCode}: ${data.toString('utf8')}`);
                     }
                     res.on('error', reject);
                     res.on('data', buffer => buffers.push(buffer));
                     res.on('end',
                         () =>
-                            res.statusCode === 200
+                            res.statusCode === Status.OK.code
                             ? resolve(Buffer.concat(buffers))
                             : reject(Buffer.concat(buffers))
                         );
@@ -154,10 +154,10 @@ const middServices =
                 let httpreq = http.request(options,  res => {
                     let buffers = [];
                     let reject = (err) => {
-                        console.error(err); 
+                        console.error(`${res.statusCode}: ${res.statusMessage}`);
                     }
                     let resolve = (data) => {
-                        console.log(data);
+                        console.log(`${res.statusCode}: ${data.toString('utf8')}`);
                     }
                     res.on('error', reject);
                     res.on('data', buffer => buffers.push(buffer));
