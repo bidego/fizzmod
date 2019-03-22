@@ -12,7 +12,7 @@
   "devDependencies": {},
   "scripts": {
     "dao": "node dao.js",
-    "server": "node socketServer.js"
+    "server": "node server.js"
   },
   "author": "",
   "license": "ISC"
