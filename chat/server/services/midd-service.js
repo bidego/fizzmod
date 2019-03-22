@@ -1,5 +1,5 @@
 const HttpService = require('./http-service')
-const { Status } = require('./status-enum')
+const { Status } = require('../enums/status-enum')
 
 module.exports = (req,res) => {
     let data = [];

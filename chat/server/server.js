@@ -1,11 +1,10 @@
 const server = require('http').createServer(serverHandler)
 const io = require('socket.io')(server)
-const fs = require('fs')
 
-const HttpService = require('./http-service')
-const middServices = require('./midd-service')
+const HttpService = require('./services/http-service')
+const middServices = require('./services/midd-service')
 const routerService = require('./router')
-const { Status } = require('./status-enum')
+const { Status } = require('./enums/status-enum')
 
 async function serverHandler(req,res) {
     routerService(req,res)

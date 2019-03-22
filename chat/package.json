@@ -11,8 +11,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "dao": "node dao.js",
-    "server": "node server.js"
+    "dao": "node db-server/dao.js",
+    "server": "node server/server.js"
   },
   "author": "",
   "license": "ISC"
