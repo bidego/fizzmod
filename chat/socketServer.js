@@ -8,16 +8,17 @@ const { Status } = require('./status-enum')
 
 async function serverHandler(req,res) {
 
+    await routerService(req,res)
     await middServices(req,res)
     
-    let archivo = fs.createReadStream(__dirname+"/index-ws.html");
+    console.log(req.headers);
+    let index = fs.createReadStream(__dirname+"/index-ws.html");
     res.writeHead(200,{
         "content-type":"text/html",
         "Access-Control-Allow-Headers":"*",
         'Access-Control-Allow-Origin': '*'
     })
-    archivo.pipe(res);
-
+    index.pipe(res);
 }
 io.on("connection", socket => {
     socket.broadcast.emit("user_in", {status:"ok", payload:"Alguien se unio"});
@@ -71,8 +72,45 @@ function parseModule(req) {
     return url.substr(2,url.length);
 }
 
+const routerService = 
+    async (req,res) => {
+        function appJs() {
+            let app = fs.createReadStream(__dirname+"/app.js");
+            res.writeHead(200,{
+                "content-type":"application/javascript",
+                "Access-Control-Allow-Headers":"*",
+                'Access-Control-Allow-Origin': '*'
+            })
+            app.pipe(res);    
+        }
+        function indexHtml() {
+            let index = fs.createReadStream(__dirname+"/index-ws.html");
+            res.writeHead(200,{
+                "content-type":"text/html",
+                "Access-Control-Allow-Headers":"*",
+                'Access-Control-Allow-Origin': '*'
+            })
+            index.pipe(res);    
+        }
+        let routes = new Map();
+        routes.set('/app.js', appJs)
+        routes.set('/index-ws.js', indexHtml)
+        let route = routes.get(req.url)
+        if (typeof route === 'function')
+            route()
+    }
 const middServices =
     async (req,res) => {
+        if (true == false) {
+            let app = fs.createReadStream(__dirname+"/index-ws.html");
+            res.writeHead(200,{
+                "content-type":"text/html",
+                "Access-Control-Allow-Headers":"*",
+                'Access-Control-Allow-Origin': '*'
+            })
+            app.pipe(res);
+        }
+        console.log(req.url)
         let data = [];
         req.on("data", chunk => {
             data.push(chunk);
