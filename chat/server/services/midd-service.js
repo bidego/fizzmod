@@ -1,12 +1,13 @@
 const HttpService = require('./http-service')
 const { Status } = require('../enums/status-enum')
+const { Evt } = require('../enums/events-enum')
 
 module.exports = (req,res) => {
     let data = [];
-    req.on("data", chunk => {
+    req.on(Evt.DATA, chunk => {
         data.push(chunk);
     })
-    req.on("end", () => {
+    req.on(Evt.END, () => {
         let body = {}
         if (req.method == 'POST') {
             try {
@@ -20,7 +21,7 @@ module.exports = (req,res) => {
         router.set('login',login);
         router.set('profile',profile);
         
-        let url = parseModule(req);
+        let url = parseRoute(req);
         let route = router.get(url);
         if (typeof route === 'function') {
             route(req);
@@ -73,9 +74,9 @@ module.exports = (req,res) => {
                     res.writeHead(Status.OK.code, { "content-type": "application/json"})
                     res.end("ok")
                 }
-                r.on('error', reject);
-                r.on('data', buffer => buffers.push(buffer));
-                r.on('end',
+                r.on(Evt.ERROR, reject);
+                r.on(Evt.DATA, buffer => buffers.push(buffer));
+                r.on(Evt.END,
                     () =>
                         r.statusCode === Status.OK.code
                         ? resolve(Buffer.concat(buffers))
@@ -100,9 +101,9 @@ module.exports = (req,res) => {
                     res.writeHead(r.statusCode, { "content-type": "application/json"})
                     res.end("ok")
                 }
-                r.on('error', reject);
-                r.on('data', buffer => buffers.push(buffer));
-                r.on('end',
+                r.on(Evt.ERROR, reject);
+                r.on(Evt.DATA, buffer => buffers.push(buffer));
+                r.on(Evt.END,
                     () =>
                         r.statusCode === 200
                         ? resolve(Buffer.concat(buffers))
@@ -116,7 +117,7 @@ module.exports = (req,res) => {
     })
 }
 
-function parseModule(req) {
+function parseRoute(req) {
     let url = req.url.split("=")[0];
     return url.substr(2,url.length);
 }

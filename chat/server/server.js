@@ -5,45 +5,40 @@ const HttpService = require('./services/http-service')
 const middServices = require('./services/midd-service')
 const routerService = require('./router')
 const { Status } = require('./enums/status-enum')
+const { Evt } = require('./enums/events-enum')
 
 async function serverHandler(req,res) {
     routerService(req,res)
     middServices(req,res)
 }
 
-io.on("connection", socket => {
-    socket.broadcast.emit("user_in", {status:"ok", payload:"Alguien se unio"});
-    
-    socket.on("login", (name,msg) => {
-        socket.broadcast.emit("new_message", {status:Status.OK.message,
+io.on(Evt.CONNECTION, socket => {
+
+    let headers = (name,msg) => {
+        return {status:Status.OK.message,
             body: {
                 feed: {
                     from: name,
                     msg: msg
                 }
             }
-        });
+        }
+    }
+
+    socket.broadcast.emit(Evt.USER_IN, {status:"ok", payload:"Alguien se unio"});
+    
+    socket.on(Evt.LOGIN, (name,msg) => {
+        socket.broadcast.emit(Evt.NEW_MESSAGE, headers(name,msg));
     })
 
-    socket.on("message", (name,msg) => {
-        socket.broadcast.emit("new_message", {status:Status.OK.message,
-            body: {
-                feed: {
-                    from: name,
-                    msg: msg
-                }
-            }
-        });
+    socket.on(Evt.MESSAGE, (name,msg) => {
+        socket.broadcast.emit(Evt.NEW_MESSAGE, headers(name,msg));
     
         let httpreq = HttpService.feed(null, function (response) {
             response.setEncoding('utf8');
-            try {
-                response.on('data', function (chunk) {
-                    console.log("body: " + chunk);
-                });
-            } catch(e) {
-                throw new Error(e);
-            }
+            response.on(Evt.DATA, function (chunk) {
+                console.log("body: " + chunk);
+            });
         });
         httpreq.end(JSON.stringify({ id_user: name, message: msg}));
     })
