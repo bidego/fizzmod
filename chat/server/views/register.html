@@ -1,0 +1,28 @@
+<container class="view" id="chatregister">
+    <header>
+        <h1>Chat</h1>
+        <h2>Registrate</h2>
+    </header>
+    <form action="/register" method="post" name="register" id="register">
+        <label for="firstname">
+            Nombre
+            <input name="firstname" type="text" maxlength="16"/>
+        </label>
+        <label for="lastname">
+            Apellido
+            <input name="lastname" type="text" maxlength="16"/>
+        </label>
+        <label for="user">
+            Usuario
+            <input name="user" type="text" maxlength="16"/>
+        </label>
+        <label for="email">
+            Email
+            <input name="email" type="text" maxlength="16"/>
+        </label>
+        <label for="actions">
+            <button type="submit" form="register" id="buttonRegister">Registrar</button>
+            <button type="button" form="login" id="goLogin">Login</button>
+        </label>
+    </form>
+</container>

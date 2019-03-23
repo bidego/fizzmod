@@ -8,7 +8,7 @@ const port = 8000;
 const Status = { OK: 200, E404: 404, E500: 500 }
 const StatusMsg = { OK: "OK", E404: "Invalid page", E500: "Internal server error" }
 
-const server = http.createServer( (req,res) => {
+const client = http.createServer( (req,res) => {
     //res.write("Hola")
     //res.write("Mundo")
     //res.end("!")
@@ -63,7 +63,7 @@ const server = http.createServer( (req,res) => {
 
 })
 
-server.on("error", () => {})
+client.on("error", () => {})
 
 console.log(`http listening in port ${port}`)
-server.listen(port);
+client.listen(port);

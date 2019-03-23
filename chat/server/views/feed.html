@@ -1,0 +1,14 @@
+<container class="view" id="chatview">
+    <header>
+        <button type="button" id="buttonGoProfile">&#9776;</button>
+    </header>
+    <container id="feedwindow">
+        <ul id="chatfeed"></ul>
+    </container>
+    <form action="/chatfeed" method="post" name="messageform" id="messageform">
+        <label for="message">
+            <textarea name="message" maxlength="256"></textarea>
+            <button type="submit" form="chatfeed" id="buttonChat">&#x25b6;</button>
+        </label>
+    </form>
+</container>

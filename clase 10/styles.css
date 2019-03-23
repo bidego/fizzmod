@@ -1,0 +1,11 @@
+ul {
+    list-style: none;
+}
+#chatview {
+    display:none;
+}
+#feedwindow {
+    height:300px;
+    overflow:auto;
+    display:block;
+}
