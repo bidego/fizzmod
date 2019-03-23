@@ -4,6 +4,9 @@ html {
 body {
     background: #eee;
 }
+body::-webkit-scrollbar {
+    width: 1em;
+}
 ul {
     list-style: none;
 }

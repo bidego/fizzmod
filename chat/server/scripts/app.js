@@ -38,6 +38,8 @@ window.onload = function() {
             feed.className = 'nouser';
         }
         jQ("chatfeed").appendChild(feed);
+        jQ("feedwindow").scroll({top:jQ("feedwindow").scrollHeight, left:0,behavior: 'smooth' })
+
     }
 
     const Scene = {
@@ -83,6 +85,7 @@ window.onload = function() {
                     if (data.user.length > 0) {
                         jQ(Scene.LOGIN).style.display = "none";
                         jQ(Scene.CHATFEED).style.display = "block";
+
                         localStorage.setItem("userId",data.user[0].id)
                         localStorage.setItem("username",data.user[0].nombre_de_usuario)
                     }                    
