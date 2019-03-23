@@ -34,16 +34,18 @@ module.exports = (req,res) => {
             let httpreq = HttpService.login(dataEncoded,  function(r) {
                 let buffers = [];
                 let reject = (err) => {
-                    console.error(`${r.statusCode}: ${r.statusMessage}`); 
+                    console.error(`${r.statusCode}: ${data.toString('utf8')}`);
+                    res.writeHead(Status.ERROR.code, { "content-type": "application/json"})
+                    res.end(err) 
                 }
                 let resolve = (data) => {
                     console.log(`${r.statusCode}: ${data.toString('utf8')}`);
                     res.writeHead(Status.OK.code, { "content-type": "application/json"})
-                    res.end()
+                    res.end( JSON.stringify({ user: JSON.parse(data.toString('utf8')) }) )
                 }
-                r.on('error', reject);
-                r.on('data', buffer => buffers.push(buffer));
-                r.on('end',
+                r.on(Evt.ERROR, reject);
+                r.on(Evt.DATA, buffer => buffers.push(buffer));
+                r.on(Evt.END,
                     () =>
                         r.statusCode === Status.OK.code
                         ? resolve(Buffer.concat(buffers))
@@ -67,12 +69,12 @@ module.exports = (req,res) => {
                 let reject = (err) => {
                     console.error(`${r.statusCode}: ${r.statusMessage}`);
                     res.writeHead(r.statusCode, { "content-type": "application/json"})
-                    res.end(r.statusMessage)
+                    res.end(err)
                 }
                 let resolve = (data) => {
                     console.log(`${r.statusCode}: ${data.toString('utf8')}`);
                     res.writeHead(Status.OK.code, { "content-type": "application/json"})
-                    res.end("ok")
+                    res.end(data)
                 }
                 r.on(Evt.ERROR, reject);
                 r.on(Evt.DATA, buffer => buffers.push(buffer));

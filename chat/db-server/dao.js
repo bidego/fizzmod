@@ -1,6 +1,5 @@
 const http = require("http")
 var mysql = require('mysql')
-const fs = require("fs")
 const port = 9000;
 const Status = { OK: 200, E400: 400, E404: 404, E500: 500 }
 const StatusMsg = { OK: "OK", E400: "Error", E404: "Invalid page", E500: "Internal server error" }
@@ -42,7 +41,7 @@ const server = http.createServer( (req,res) => {
             } else {
                 console.table(result);
                 res.writeHead(Status.OK, StatusMsg.OK, { "content-type": "application/json"})
-                res.end("Ok");
+                res.end(JSON.stringify(result));
             }
         })
 

@@ -25,8 +25,4 @@ module.exports = async (req,res) => {
     let route = routes.get(req.url)
     if (typeof route === 'object')
         fetchFile(route)
-    else {
-        res.writeHead(Status.NO_PAGE.code, Status.NO_PAGE.message)
-        res.end("no file")
-    }
 }

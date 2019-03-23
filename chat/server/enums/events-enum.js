@@ -1,6 +1,7 @@
 module.exports = {
     Evt: {
         CONNECTION: 'connection',
+        DISCONNECT: 'disconnect',
         LOGIN: 'login',
         USER_IN: 'user_in',
         DATA: 'data',

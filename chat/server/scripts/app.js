@@ -24,16 +24,18 @@ window.onload = function() {
         console.log("se conectó un")
     })
     socket.on(Event.NEW_MESSAGE, function(data) {
-        console.log(data);
-        digest(data.body.feed.from,data.body.feed.msg);
+        digest(data.body.feed);
     })
 
-    const digest = function(user,msg) {
+    const digest = function(data) {
+        let { userId, username, msg } = data;
         let feed = eL('li');
-        feed.innerHTML = user +": "+ msg;
+        feed.innerHTML = username +": "+ msg;
         feed.style.paddingRight = '20px';
-        if (user.match(F('login').user.value)) {
-            feed.style.textAlign = 'right';
+        if (username.match(localStorage.getItem('username'))) {
+            feed.className = 'user';
+        } else {
+            feed.className = 'nouser';
         }
         jQ("chatfeed").appendChild(feed);
     }
@@ -77,13 +79,14 @@ window.onload = function() {
                     console.log("NOT OK: "+response.status);
                     return;
                 }
-    
-                jQ(Scene.LOGIN).style.display = "none";
-                jQ(Scene.CHATFEED).style.display = "block";
-    
-                response.json().then(function(data) {
-                    console.log(data);
-                });
+                response.json().then((data)=>{
+                    if (data.user.length > 0) {
+                        jQ(Scene.LOGIN).style.display = "none";
+                        jQ(Scene.CHATFEED).style.display = "block";
+                        localStorage.setItem("userId",data.user[0].id)
+                        localStorage.setItem("username",data.user[0].nombre_de_usuario)
+                    }                    
+                })    
             }
         )
         .catch(function(err) {
@@ -111,7 +114,7 @@ window.onload = function() {
                     response.status);
                     return;
                 }
-    
+                if (response)
                 jQ(Scene.REGISTER).style.display = "none";
                 jQ(Scene.CHATFEED).style.display = "block";
     
@@ -129,7 +132,8 @@ window.onload = function() {
     function editProfile(event) {
         event.preventDefault();
         let data = {
-            user: F('login').user.value,
+            userId: localStorage.getItem('userId'),
+            username: localStorage.getItem('username'),
             firstname: F('profile').nombre.value,
             lastname: F('profile').apellido.value
         }
@@ -145,10 +149,11 @@ window.onload = function() {
                     console.log("NOT OK: "+response.status);
                     return;
                 }
-    
-                jQ(Scene.PROFILE).style.display = "none";
-                jQ(Scene.CHATFEED).style.display = "block";
-    
+                console.log("rta: " + response.body.length)
+                if (response.body.length > 0) {
+                    jQ(Scene.PROFILE).style.display = "none";
+                    jQ(Scene.CHATFEED).style.display = "block";
+                }
                 response.json().then(function(data) {
                     console.log(data);
                 });
@@ -160,11 +165,12 @@ window.onload = function() {
     }
     function submitFeed(event) {
         event.preventDefault();
-        let user = F('login').user.value;
+        let userId = localStorage.getItem('userId');
+        let username = localStorage.getItem('username');
         let msg = F('messageform').message.value
-        socket.emit("message",user,msg, function(data) {
+        socket.emit("message",userId,username,msg, function(data) {
             console.log(data);
         })
-        digest(user,msg)
+        digest({ userId: userId, username: username, msg: msg})
     }
 }

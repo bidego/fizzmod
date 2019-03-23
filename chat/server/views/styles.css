@@ -7,6 +7,9 @@ body {
 ul {
     list-style: none;
 }
+button:focus {
+    outline:none
+}
 .view header {
     width:100%;
     text-align: center;
@@ -49,6 +52,23 @@ ul {
 #chatview textarea {
     width:70%;
 }
+#chatview li.user {
+    float:right;
+    text-align: right;
+}
+#chatview li.nouser {
+    float: left;
+    text-align: left;
+}
+#chatview li {
+    width:70%;
+    font-size:12px;
+    margin:5px;
+    padding:5px;
+    background-color: #eee;
+    border-radius:5px;
+}
+
 #feedwindow {
     height:370px;
     overflow:auto;
