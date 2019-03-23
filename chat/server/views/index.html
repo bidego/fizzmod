@@ -2,78 +2,13 @@
 <html>
 <head>
     <title>Chat App</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script type="text/javascript" src="app.js"></script>
 </head>
 <body>
     <style>
-        html {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-        }
-        button {
-            color: white;
-            background-color: blue;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-        ul {
-            list-style: none;
-        }
-        .view header {
-            width:100%;
-            text-align: center;
-            display:block;
-        }
-        #container {
-            position:absolute;
-            width:100%;
 
-        }
-        .view form {
-            padding:20px;
-            width: 290px;
-        }
-        .view label {
-            width:90%;
-            padding:20px;
-            display: block;
-        }
-        .view input {
-            margin-right:20px;
-            float:right;
-        }
-        .view {
-            display:block;
-            margin:0 auto;
-            position:relative;
-            width: 310px;
-            height: 500px;
-            border: 1px solid #666;
-            border-radius: 30px;
-        }
-        .view label {
-            display: inline-block;            
-        }
-        #chatview,#chatprofile,#chatlogin {
-            display:none
-        }
-        #chatview textarea {
-            width:70%;
-        }
-        #feedwindow {
-            height:370px;
-            overflow:auto;
-            display:block;
-        }
-        #buttonChat {
-            float:right;
-            margin-right: 80p;
-        }
-        #buttonChat, #buttonGoProfile {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
     </style>
     <div id="container">
         <container class="view" id="chatlogin">

@@ -1,0 +1,71 @@
+html {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+body {
+    background: #eee;
+}
+ul {
+    list-style: none;
+}
+.view header {
+    width:100%;
+    text-align: center;
+    display:block;
+}
+#container {
+    position:absolute;
+    width:100%;
+
+}
+.view form {
+    padding:20px;
+    width: 290px;
+}
+.view label {
+    width:90%;
+    padding:20px;
+    display: inline-block;            
+}
+.view input {
+    margin-right:20px;
+    float:right;
+}
+.view {
+    padding: 10px 0px 0px 0px;
+    background-color: #fff;
+    display:block;
+    margin:0 auto;
+    position:relative;
+    width: 310px;
+    height: 500px;
+    border-right: 2px solid #666;
+    border-bottom: 2px solid #444;
+    border-radius: 30px;
+}
+
+#chatview, #chatprofile, #chatlogin {
+    display:none
+}
+#chatview textarea {
+    width:70%;
+}
+#feedwindow {
+    height:370px;
+    overflow:auto;
+    display:block;
+}
+button {
+    color: white;
+    background-color: blue;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+#buttonChat {
+    float:right;
+    margin-right: 80p;
+}
+#buttonChat, #buttonGoProfile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
