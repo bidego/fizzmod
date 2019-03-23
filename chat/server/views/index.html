@@ -11,85 +11,10 @@
 
     </style>
     <div id="container">
-        <container class="view" id="chatlogin">
-            <header>
-                <h1>Chat</h1>
-                <h2>Login</h2>
-            </header>
-            <form action="/login" method="post" name="login" id="login">
-                <label for="email">
-                    Email
-                    <input name="email" type="text" maxlength="128"/>
-                </label>
-                <label for="user">
-                    Usuario
-                    <input name="user" type="text" maxlength="16"/>
-                </label>
-                <label for="actions">
-                    <button type="submit" form="login" id="buttonEnter">Entrar</button>
-                </label>
-            </form>
-        </container>
-        <container class="view" id="chatregister">
-            <header>
-                <h1>Chat</h1>
-                <h2>Registrate</h2>
-            </header>
-            <form action="/register" method="post" name="register" id="register">
-                <label for="firstname">
-                    Nombre
-                    <input name="firstname" type="text" maxlength="16"/>
-                </label>
-                <label for="lastname">
-                    Apellido
-                    <input name="lastname" type="text" maxlength="16"/>
-                </label>
-                <label for="user">
-                    Usuario
-                    <input name="user" type="text" maxlength="16"/>
-                </label>
-                <label for="email">
-                    Email
-                    <input name="email" type="text" maxlength="16"/>
-                </label>
-                <label for="actions">
-                    <button type="submit" form="register" id="buttonRegister">Registrar</button>
-                    <button type="button" form="login" id="goLogin">Login</button>
-                </label>
-            </form>
-        </container>
-        <container class="view" id="chatprofile">
-            <header>
-                <h2>Mi perfil</h2>
-            </header>
-            <form action="/profile" method="post" name="profile" id="profile">
-                <label for="user">Usuario</label>
-                <span class="user"></span>
-                <label for="nombre">Nombre
-                    <input name="nombre" type="text" maxlength="16"/>
-                </label>
-                <label for="apellido">Apellido
-                    <input name="apellido" type="text" maxlength="16"/>
-                </label>
-                <label for="actions">
-                    <button type="submit" form="profile" id="buttonEditProfile">Editar</button>
-                </label>
-            </form>
-        </container>
-        <container class="view" id="chatview">
-            <header>
-                <button type="button" id="buttonGoProfile">&#9776;</button>
-            </header>
-            <container id="feedwindow">
-                <ul id="chatfeed"></ul>
-            </container>
-            <form action="/chatfeed" method="post" name="messageform" id="messageform">
-                <label for="message">
-                    <textarea name="message" maxlength="256"></textarea>
-                    <button type="submit" form="chatfeed" id="buttonChat">&#x25b6;</button>
-                </label>
-            </form>
-        </container>
+        <chatlogin>
+        <chatregister>
+        <chatprofile>
+        <chatfeed>
     </div>
 </body>
 </html>

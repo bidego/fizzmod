@@ -1,6 +1,6 @@
 const fs = require('fs')
 const { Status } = require('./enums/status-enum')
-const { ContentType } = require('./enums/content-type-enum')
+const { Endpoints } = require('./endpoints')
 
 module.exports = async (req,res) => {
     
@@ -16,13 +16,39 @@ module.exports = async (req,res) => {
         res.writeHead(Status.OK.code,headers(r.type))
         file.pipe(res);    
     }
+
+    async function renderHtml(Route) {
+        // In progress: Lectura de templates para inyectar componentes
+        fs.readFile(__dirname + '/' + Route.path, 'utf8', async function(err, html){
+            let out = html;
+            for ( let child of Route.childs) {
+                let childHtml = fs.readFileSync(__dirname + '/' + child.path, 'utf8');
+                console.log(child.selector)
+                out = out.replace(child.selector,childHtml)
+            }
+            console.log(out)
+            res.writeHead(Status.OK.code,headers(Route.type))
+            res.end(out);
+        });
+    }
+    async function readTemplate(path) {
+    }
+    let index = function() {
+        renderHtml(Endpoints.indexHtml);
+    };
+
     let routes = new Map();
-    routes.set('/app.js', { path: "scripts/app.js", type: ContentType.JS })
-    routes.set('/styles.css', { path: "views/styles.css", type: ContentType.CSS })
-    routes.set('/index.html', { path: "views/index.html", type: ContentType.HTML })
-    routes.set('/', { path: "views/index.html", type: ContentType.HTML })
-    
+    routes.set('/app.js', Endpoints.appJs )
+    routes.set('/styles.css', Endpoints.stylesCss )
+    routes.set('/index.html', Endpoints.indexHtml)
+    routes.set('/', index)
     let route = routes.get(req.url)
-    if (typeof route === 'object')
-        fetchFile(route)
+    
+    let getRoute = new Map()
+    .set('object', function() { fetchFile(route) })
+    .set('function', function () { route() })
+    let callback = getRoute.get(typeof route)
+
+    if (typeof callback === 'function')
+        callback();
 }

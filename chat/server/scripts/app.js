@@ -114,14 +114,15 @@ window.onload = function() {
                     response.status);
                     return;
                 }
-                if (response)
-                jQ(Scene.REGISTER).style.display = "none";
-                jQ(Scene.CHATFEED).style.display = "block";
-    
-                F('login').user.value = data.user;
-                F('login').email.value = data.email;
-                response.json().then(function(data) {
-                    console.log(data);
+                response.json().then(function(r) {
+                    jQ(Scene.REGISTER).style.display = "none";
+                    jQ(Scene.CHATFEED).style.display = "block";
+                    localStorage.setItem('userId',r.insertId)
+                    localStorage.setItem('username',data.user)
+                    F('login').user.value = data.user;
+                    F('login').email.value = data.email;
+                    F('profile').firstname.value = data.firstname;
+                    F('profile').lastname.value = data.lastname;
                 });
             }
         )
