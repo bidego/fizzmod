@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { Status } = require('./enums/')
+const { ContentType, Status } = require('./enums/')
 const { Endpoints } = require('./endpoints')
 
 module.exports = (req,res) => {    
@@ -32,16 +32,24 @@ module.exports = (req,res) => {
         renderHtml(Endpoints.indexHtml);
     };
 
+    let noPage = function() {
+        setTimeout(function() {
+            res.writeHead(Status.NO_PAGE.code,headers(ContentType.JSON))
+            res.end("ERROR");
+        },5000);
+    }
+
     let routes = new Map();
     routes.set('/app.js', Endpoints.appJs )
     routes.set('/styles.css', Endpoints.stylesCss )
-    routes.set('/index.html', Endpoints.indexHtml)
+    routes.set('/index.html', index)
     routes.set('/', index)
     let route = routes.get(req.url)
     
     let getRoute = new Map()
-    .set('object', function() { fetchFile(route) })
-    .set('function', function () { route() })
+    .set('object', function() { fetchFile(route) } )
+    .set('function', route )
+    .set('undefined', noPage )
     let callback = getRoute.get(typeof route)
 
     if (typeof callback === 'function')
