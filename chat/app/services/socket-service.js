@@ -1,6 +1,5 @@
+const { Status, Evt } = require('../enums/')
 module.exports = function(io) {
-    const { Status, Evt } = require('../enums/')
-    const { HttpService } = require('../')
     let clients = []
     io.on(Evt.CONNECTION, socket => {
         clients.push(socket)
@@ -29,6 +28,7 @@ module.exports = function(io) {
         })
 
         socket.on(Evt.MESSAGE, (userId,username,msg) => {
+            const { HttpService } = require('../')
             socket.broadcast.emit(Evt.NEW_MESSAGE, headers(userId,username,msg));
         
             let httpreq = HttpService.feed(null, function (response) {
