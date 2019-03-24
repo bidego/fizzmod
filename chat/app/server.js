@@ -6,7 +6,7 @@ const {
     RouterService: routerService
 } = require('./')
 
-async function serverHandler(req,res) {
+function serverHandler(req,res) {
     routerService(req,res)
     middServices(req,res)
 }
