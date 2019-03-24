@@ -1,4 +1,4 @@
-const { ContentType } = require('./enums/content-type-enum')
+const { ContentType } = require('./enums/')
 module.exports = {
     Endpoints: {
         appJs: { path: "scripts/app.js", type: ContentType.JS },

@@ -1,8 +1,7 @@
-const HttpService = require('./http-service')
-const { Status } = require('../enums/status-enum')
-const { Evt } = require('../enums/events-enum')
+module.exports = function(req,res) {
+    const { HttpService } = require('../');
+    const { Status, Evt } = require('../enums/')
 
-module.exports = (req,res) => {
     let data = [];
     req.on(Evt.DATA, chunk => {
         data.push(chunk);
@@ -38,11 +37,6 @@ module.exports = (req,res) => {
                     res.writeHead(Status.ERROR.code, { "content-type": "application/json"})
                     res.end(err) 
                 }
-                let resolve = (data) => {
-                    console.log(`${r.statusCode}: ${data.toString('utf8')}`);
-                    res.writeHead(Status.OK.code, { "content-type": "application/json"})
-                    res.end( JSON.stringify({ user: JSON.parse(data.toString('utf8')) }) )
-                }
                 r.on(Evt.ERROR, reject);
                 r.on(Evt.DATA, buffer => buffers.push(buffer));
                 r.on(Evt.END,
@@ -71,11 +65,6 @@ module.exports = (req,res) => {
                     res.writeHead(r.statusCode, { "content-type": "application/json"})
                     res.end(err)
                 }
-                let resolve = (data) => {
-                    console.log(`${r.statusCode}: ${data.toString('utf8')}`);
-                    res.writeHead(Status.OK.code, { "content-type": "application/json"})
-                    res.end(data)
-                }
                 r.on(Evt.ERROR, reject);
                 r.on(Evt.DATA, buffer => buffers.push(buffer));
                 r.on(Evt.END,
@@ -98,11 +87,6 @@ module.exports = (req,res) => {
                 let reject = (err) => {
                     console.error(err); 
                 }
-                let resolve = (data) => {
-                    console.log(data);
-                    res.writeHead(r.statusCode, { "content-type": "application/json"})
-                    res.end("ok")
-                }
                 r.on(Evt.ERROR, reject);
                 r.on(Evt.DATA, buffer => buffers.push(buffer));
                 r.on(Evt.END,
@@ -116,7 +100,13 @@ module.exports = (req,res) => {
             httpreq.write(dataEncoded)
             httpreq.end();
         }
+        function resolve(data) {
+            console.log(`${Status.OK.code}: ${data.toString('utf8')}`);
+            res.writeHead(Status.OK.code, { "content-type": "application/json"})
+            res.end( JSON.stringify({ body: JSON.parse(data.toString('utf8')) }) )
+        }
     })
+
 }
 
 function parseRoute(req) {

@@ -1,13 +1,12 @@
 const http = require('http');
 
 module.exports = {
-    register: function(dto,callback) { return this.http('register',dto, callback) },
-    profile: function(dto,callback) { return this.http('profile', dto, callback) },
-    feed: function(dto,callback) { return this.http('feed', dto, callback) },
-    login: function(dto,callback) { return this.http('login', dto, callback) },
+    register: function(dto,callback) { return this.post('register',dto, callback) },
+    profile: function(dto,callback) { return this.post('profile', dto, callback) },
+    feed: function(dto,callback) { return this.post('feed', dto, callback) },
+    login: function(dto,callback) { return this.post('login', dto, callback) },
 
-    http: function(endpoint,dto, callback) {
-        console.log("adentro!!!")
+    post: function(endpoint,dto, callback) {
         let opt = this.options(dto);
         opt.path += endpoint
         let req = http.request(opt, callback);
@@ -15,8 +14,8 @@ module.exports = {
     },
     options: function(dto) {
         return {
-            host: 'localhost',
-            port: 9000,
+            host: require('../').Config.DAO.host,
+            port: require('../').Config.DAO.port,
             path: '/',
             method: 'POST',
             headers: this.buildHeader(dto)

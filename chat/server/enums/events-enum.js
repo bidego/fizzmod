@@ -1,5 +1,5 @@
 module.exports = {
-    Evt: {
+    Events: {
         CONNECTION: 'connection',
         DISCONNECT: 'disconnect',
         LOGIN: 'login',

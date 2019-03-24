@@ -61,6 +61,18 @@ window.onload = function() {
     jQ("buttonChat").addEventListener(Event.CLICK, submitFeed);
     jQ("buttonEnter").addEventListener(Event.CLICK, login);
     jQ("buttonEditProfile").addEventListener(Event.CLICK, editProfile);
+    qS(".go-chat").addEventListener(Event.CLICK, goChat)
+    qS(".go-register").addEventListener(Event.CLICK, goRegister)
+
+    function goChat() {
+        jQ(Scene.LOGIN).style.display = "none";
+        jQ(Scene.PROFILE).style.display = "none";
+        jQ(Scene.CHATFEED).style.display = "block";
+    }
+    function goRegister() {
+        jQ(Scene.LOGIN).style.display = 'none';
+        jQ(Scene.REGISTER).style.display = 'block';
+    }
 
     function goLogin() {
         jQ(Scene.LOGIN).style.display = 'block';
@@ -82,12 +94,11 @@ window.onload = function() {
                     return;
                 }
                 response.json().then((data)=>{
-                    if (data.user.length > 0) {
-                        jQ(Scene.LOGIN).style.display = "none";
-                        jQ(Scene.CHATFEED).style.display = "block";
-
-                        localStorage.setItem("userId",data.user[0].id)
-                        localStorage.setItem("username",data.user[0].nombre_de_usuario)
+                    if (data.body.length > 0) {
+                        let user = data.body[0];
+                        localStorage.setItem("userId",user.id)
+                        localStorage.setItem("username",user.nombre_de_usuario)
+                        goChat();
                     }                    
                 })    
             }
@@ -120,7 +131,7 @@ window.onload = function() {
                 response.json().then(function(r) {
                     jQ(Scene.REGISTER).style.display = "none";
                     jQ(Scene.CHATFEED).style.display = "block";
-                    localStorage.setItem('userId',r.insertId)
+                    localStorage.setItem('userId',r.body.insertId)
                     localStorage.setItem('username',data.user)
                     F('login').user.value = data.user;
                     F('login').email.value = data.email;
@@ -137,9 +148,9 @@ window.onload = function() {
         event.preventDefault();
         let data = {
             userId: localStorage.getItem('userId'),
-            username: localStorage.getItem('username'),
-            firstname: F('profile').nombre.value,
-            lastname: F('profile').apellido.value
+            user: localStorage.getItem('username'),
+            firstname: F('profile').firstname.value,
+            lastname: F('profile').lastname.value
         }
         fetch('http://localhost:8080/?profile', {
             method: 'POST', body: JSON.stringify(data),
@@ -153,13 +164,10 @@ window.onload = function() {
                     console.log("NOT OK: "+response.status);
                     return;
                 }
-                console.log("rta: " + response.body.length)
-                if (response.body.length > 0) {
-                    jQ(Scene.PROFILE).style.display = "none";
-                    jQ(Scene.CHATFEED).style.display = "block";
-                }
                 response.json().then(function(data) {
-                    console.log(data);
+                    if (data.body && data.body.affectedRows > 0) {
+                        goChat();
+                    }
                 });
             }
         )

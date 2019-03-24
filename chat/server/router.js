@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { Status } = require('./enums/status-enum')
+const { Status } = require('./enums/')
 const { Endpoints } = require('./endpoints')
 
 module.exports = async (req,res) => {
@@ -31,8 +31,7 @@ module.exports = async (req,res) => {
             res.end(out);
         });
     }
-    async function readTemplate(path) {
-    }
+
     let index = function() {
         renderHtml(Endpoints.indexHtml);
     };
