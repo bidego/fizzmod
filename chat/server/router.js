@@ -2,7 +2,7 @@ const fs = require('fs')
 const { Status } = require('./enums/')
 const { Endpoints } = require('./endpoints')
 
-module.exports = (req,res) => {    
+module.exports = (req,res) => {
     let headers = (type) => { return {
             "content-type":type,
             "Access-Control-Allow-Headers":"*",
@@ -40,8 +40,8 @@ module.exports = (req,res) => {
     let route = routes.get(req.url)
     
     let getRoute = new Map()
-    .set('object', function() { fetchFile(route) })
-    .set('function', function () { route() })
+    .set('object', fetchFile.bind(route) )
+    .set('function', route )
     let callback = getRoute.get(typeof route)
 
     if (typeof callback === 'function')
