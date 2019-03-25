@@ -6,14 +6,27 @@ module.exports = function(io) {
 
         socket.on(Evt.DISCONNECT, function() {
             let i = clients.indexOf(socket);
-            clients.splice(i, 1);
+            let cli = clients.splice(i, 1)[0];
+            const { HttpService } = require('../')
+            
+            if (cli.data) {
+                let httpreq = HttpService.disconnect(JSON.stringify({id: cli.data}),function(data) {
+                    console.log(data)
+                    socket.broadcast.emit(Evt.NOTIFY_USER_LIST, { status: Status.OK.code, body: { notify: true }});
+                })
+                httpreq.end(JSON.stringify({id: cli.data}));
+            }
             console.log("sockets: " +clients.length)
         })
 
         socket.broadcast.emit(Evt.USER_IN, {status:"ok", payload:"Alguien se unio"});
         
-        socket.on(Evt.LOGIN, (userId,username,msg) => {
-            socket.broadcast.emit(Evt.NEW_MESSAGE, buildMessage(userId,username,msg));
+        socket.on(Evt.LOGIN, function(data) {
+            let i = clients.indexOf(socket);
+            let cli = clients.splice(i, 1)[0];
+            cli.data = data;
+            clients.push(cli);
+            socket.broadcast.emit(Evt.NOTIFY_USER_LIST, { status: Status.OK.code, body: { notify: true }});
         })
 
         socket.on(Evt.MESSAGE, (userId,username,msg) => {

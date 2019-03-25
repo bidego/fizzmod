@@ -2,7 +2,7 @@ window.onload = function() {
     if (typeof fetch !== 'function') alert("Navegador incompatible");
 
     const jQ = function(id) { return document.getElementById(id) }
-    const qS = function(q) { return document.querySelector(q) }
+    const qS = function(q,all) { return all ? document.querySelectorAll(q) : document.querySelector(q) }
     const eL = function(el) { return document.createElement(el) }
     const F = function(name) { return document.forms[name] }
     const AppConfig = {
@@ -10,19 +10,36 @@ window.onload = function() {
     }
     const Event = {
         CONNECT: 'connect',
+        DISCONNECT: 'disconnect',
         USER_IN: 'user_in',
         NEW_MESSAGE: 'new_message',
-        CLICK: 'click'
+        CLICK: 'click',
+        NOTIFY_USER_LIST: 'notify_user_list'
     }
 
     const socket = io(AppConfig.SOCKET_URL)        
 
+    initialize()
+
     socket.on(Event.CONNECT, function() {
         //socket.send('hi');
     })
-    socket.on(Event.USER_IN, function() {
+    socket.on(Event.DISCONNECT, function() {
+        let userId = localStorage.getItem('userId');
+        let username = localStorage.getItem('username');
+        let msg = F('messageform').message.value
+        socket.emit("message",userId,username,msg, function(data) {
+            console.log(data);
+        })
+    })
+    socket.on(Event.USER_IN, function(data) {
         console.log("se conectó un")
     })
+
+    socket.on(Event.NOTIFY_USER_LIST, function(data) {
+        if ( data.body.notify ) buildList();
+    })
+
     socket.on(Event.NEW_MESSAGE, function(data) {
         digest(data.body.feed);
     })
@@ -46,27 +63,71 @@ window.onload = function() {
         LOGIN: 'chatlogin',
         REGISTER: 'chatregister',
         CHATFEED: 'chatview',
-        PROFILE: 'chatprofile'
+        PROFILE: 'chatprofile',
+        USERLIST: 'userlist'
     }
 
     
-    jQ("buttonGoProfile").addEventListener(Event.CLICK, function(){
+    qS(".go-profile",true).forEach(e => e.addEventListener(Event.CLICK, function(){
         jQ(Scene.CHATFEED).style.display = 'none';
+        jQ(Scene.USERLIST).style.display = 'none';
         jQ(Scene.PROFILE).style.display = 'block';
         qS('#chatprofile .user').innerHTML = F('login').user.value;
-    });
+    }));
+
+    qS(".go-userlist",true).forEach(e => e.addEventListener(Event.CLICK, function(){
+        jQ(Scene.CHATFEED).style.display = 'none';
+        jQ(Scene.PROFILE).style.display = 'none';
+        jQ(Scene.USERLIST).style.display = 'block';
+
+        buildList();
+    }));
+
+    function buildList() {
+        jQ('contacts').innerHTML = "";
+        let req = {}
+
+        fetch('http://localhost:8080/?userlist', {
+            method: 'POST', body: JSON.stringify(req),
+            headers:{ 'Content-Type': 'application/json' }
+        })
+        .then(
+            function(response) {
+                if (response.status !== 200) {
+                    console.log("NOT OK: "+response.status);
+                    return;
+                }
+                response.json().then((data)=>{
+                    if (data.body.length > 0) {
+                        let userlist = data.body;
+                        for (let user of userlist) {
+                            let li = eL('li');
+                            let { nombre_de_usuario: username, estado } = user;
+                            li.innerHTML = username;
+                            li.className = estado;
+                            jQ("contacts").appendChild(li);
+                        }
+                    }                    
+                })    
+            }
+        )
+        .catch(function(err) {
+            console.log('Fetch Error: ', err);
+        });
+}
 
     jQ("buttonRegister").addEventListener(Event.CLICK, register);
-    jQ("goLogin").addEventListener(Event.CLICK, goLogin);
     jQ("buttonChat").addEventListener(Event.CLICK, submitFeed);
     jQ("buttonEnter").addEventListener(Event.CLICK, login);
     jQ("buttonEditProfile").addEventListener(Event.CLICK, editProfile);
-    qS(".go-chat").addEventListener(Event.CLICK, goChat)
-    qS(".go-register").addEventListener(Event.CLICK, goRegister)
+    qS(".go-login",true).forEach( e => e.addEventListener(Event.CLICK, goLogin) );
+    qS(".go-chat",true).forEach( e => e.addEventListener(Event.CLICK, goChat) );
+    qS(".go-register",true).forEach(e => e.addEventListener(Event.CLICK, goRegister));
 
     function goChat() {
         jQ(Scene.LOGIN).style.display = "none";
         jQ(Scene.PROFILE).style.display = "none";
+        jQ(Scene.USERLIST).style.display = "none";
         jQ(Scene.CHATFEED).style.display = "block";
     }
     function goRegister() {
@@ -95,11 +156,14 @@ window.onload = function() {
                 }
                 response.json().then((data)=>{
                     if (data.body.length > 0) {
-                        let user = data.body[0];
-                        localStorage.setItem("userId",user.id)
-                        localStorage.setItem("username",user.nombre_de_usuario)
+                        let { id: userId, nombre_de_usuario: username } = data.body[0];
+                        localStorage.setItem("userId",userId)
+                        localStorage.setItem("username",username)
                         goChat();
-                    }                    
+                        socket.emit("login",userId,username, function(data) {
+                            console.log(data);
+                        })
+                    }
                 })    
             }
         )
@@ -184,5 +248,9 @@ window.onload = function() {
             console.log(data);
         })
         digest({ userId: userId, username: username, msg: msg})
+    }
+
+    function initialize() {
+        jQ('chatregister').style.display = 'block';
     }
 }

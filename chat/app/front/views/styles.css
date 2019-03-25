@@ -37,9 +37,9 @@ button:focus {
     float:right;
 }
 .view {
+    display:none;
     padding: 10px 0px 0px 0px;
     background-color: #fff;
-    display:block;
     margin:0 auto;
     position:relative;
     width: 310px;
@@ -47,10 +47,6 @@ button:focus {
     border-right: 2px solid #666;
     border-bottom: 2px solid #444;
     border-radius: 30px;
-}
-
-#chatview, #chatprofile, #chatlogin {
-    display:none
 }
 #chatview textarea {
     width:70%;
@@ -70,6 +66,13 @@ button:focus {
     padding:5px;
     background-color: #eee;
     border-radius:5px;
+}
+
+#userlist container {
+    height:400px;
+    overflow-y:auto;
+    overflow-x: hidden;
+    display:block;
 }
 
 #feedwindow {

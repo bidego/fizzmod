@@ -5,6 +5,9 @@ module.exports = {
     profile: function(dto,callback) { return this.post('profile', dto, callback) },
     feed: function(dto,callback) { return this.post('feed', dto, callback) },
     login: function(dto,callback) { return this.post('login', dto, callback) },
+    connect: function(dto,callback) { return this.post('connect', dto, callback) },
+    disconnect: function(dto,callback) { return this.post('disconnect', dto, callback) },
+    userlist: function(dto,callback) { return this.post('userlist', dto, callback) },
 
     post: function(endpoint,dto, callback) {
         let opt = this.options(dto);

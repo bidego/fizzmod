@@ -28,9 +28,12 @@ const server = http.createServer( (req,res) => {
         let serviceStrategy = new Map();
         serviceStrategy.set('register', QUERY.USERS.ADD.bind(this,r.user,r.firstname,r.lastname,r.email,2));
         serviceStrategy.set('login', QUERY.login.bind(this,r.user));
+        serviceStrategy.set('connect', QUERY.connect.bind(this,r.id));
+        serviceStrategy.set('disconnect', QUERY.disconnect.bind(this,r.id));
         serviceStrategy.set('feed', QUERY.MESSAGES.NEW.bind(this,r.id_user,r.message,1));
         serviceStrategy.set('profile', QUERY.USERS.EDIT.bind(this,r.user,r.firstname,r.lastname));
-        let query = serviceStrategy.get(getSecuredRoute(req))();    
+        serviceStrategy.set('userlist', () => QUERY.getUsers);
+        let query = serviceStrategy.get(getSecuredRoute(req))();
         
         con.query(query, (err,result,fields) => {
             console.log(query);

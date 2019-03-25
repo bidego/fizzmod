@@ -8,6 +8,7 @@ module.exports = {
         MESSAGE: 'message',
         NEW_MESSAGE: 'new_message',
         END: 'end',
-        ERROR: 'error'
+        ERROR: 'error',
+        NOTIFY_USER_LIST: 'notify_user_list'
     }
 }

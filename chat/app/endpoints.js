@@ -7,7 +7,8 @@ module.exports = {
             { path: "views/register.html", selector: "<chatregister>" },
             { path: "views/login.html", selector: "<chatlogin>"},
             { path: "views/profile.html", selector: "<chatprofile>"},
-            { path: "views/feed.html", selector: "<chatfeed>"}
+            { path: "views/feed.html", selector: "<chatfeed>"},
+            { path: "views/user-list.html", selector: "<userlist>"}
         ] }
     }
 }

@@ -8,7 +8,7 @@ const {
 
 function serverHandler(req,res) {
     routerService(req,res)
-    middServices(req,res)
+    middServices(req,res,io)
 }
 SocketService(io)
 server.listen(Config.APP.port)
