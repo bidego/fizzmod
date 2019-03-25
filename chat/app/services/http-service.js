@@ -3,6 +3,7 @@ const http = require('http');
 module.exports = {
     register: function(dto,callback) { return this.post('register',dto, callback) },
     profile: function(dto,callback) { return this.post('profile', dto, callback) },
+    editProfile: function(dto,callback) { return this.post('editProfile', dto, callback) },
     feed: function(dto,callback) { return this.post('feed', dto, callback) },
     login: function(dto,callback) { return this.post('login', dto, callback) },
     connect: function(dto,callback) { return this.post('connect', dto, callback) },

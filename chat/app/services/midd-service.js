@@ -75,9 +75,15 @@ module.exports = function(req,res,io) {
         }
         function profile(){
             let dataEncoded = JSON.stringify(body)
-            let httpreq = HttpService.profile(dataEncoded,callback);
-            httpreq.write(dataEncoded)
-            httpreq.end();
+            if (body.firstname) {
+                let httpreq = HttpService.editProfile(dataEncoded,callback);   
+                httpreq.write(dataEncoded)
+                httpreq.end();
+            } else {
+                let httpreq = HttpService.profile(dataEncoded,callback);   
+                httpreq.write(dataEncoded)
+                httpreq.end();
+            }
         }
         function userlist(){
             let dataEncoded = JSON.stringify(body)

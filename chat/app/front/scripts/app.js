@@ -62,24 +62,26 @@ window.onload = function() {
     }
 
     
-    qS(".go-profile",true).forEach(e => e.addEventListener(Event.CLICK, function(){
-        jQ(Scene.CHATFEED).style.display = 'none';
-        jQ(Scene.USERLIST).style.display = 'none';
-        jQ(Scene.PROFILE).style.display = 'block';
-        qS('#chatprofile .user').innerHTML = F('login').user.value;
-    }));
+    qS(".go-profile",true).forEach(e => e.addEventListener(Event.CLICK, goProfile));
 
-    qS(".go-userlist",true).forEach(e => e.addEventListener(Event.CLICK, function(){
-        jQ(Scene.CHATFEED).style.display = 'none';
-        jQ(Scene.PROFILE).style.display = 'none';
-        jQ(Scene.USERLIST).style.display = 'block';
+    qS(".go-userlist",true).forEach(e => e.addEventListener(Event.CLICK, goUserlist));
 
+    qS("#userlist #fetchAll").addEventListener(Event.CLICK, function() {
+        buildList(true);
+        qS("#userlist #fetchAll").style.display = 'none';
+        qS("#userlist #fetchConnected").style.display = 'block'
+    })
+
+    qS("#userlist #fetchConnected").addEventListener(Event.CLICK, function() {
         buildList();
-    }));
-
-    function buildList() {
+        qS("#userlist #fetchAll").style.display = 'block';
+        qS("#userlist #fetchConnected").style.display = 'none'
+    })
+    function buildList(all) {
         jQ('contacts').innerHTML = "";
-        let req = {}
+        let req = {
+            all: all
+        }
 
         fetch('http://localhost:8080/?userlist', {
             method: 'POST', body: JSON.stringify(req),
@@ -96,9 +98,10 @@ window.onload = function() {
                         let userlist = data.body;
                         for (let user of userlist) {
                             let li = eL('li');
-                            let { nombre_de_usuario: username, estado } = user;
+                            let { nombre_de_usuario: username, estado, firstAndLastName } = user;
                             li.innerHTML = username;
                             li.className = estado;
+                            li.setAttribute("tooltip", firstAndLastName)
                             jQ("contacts").appendChild(li);
                         }
                     }                    
@@ -108,7 +111,37 @@ window.onload = function() {
         .catch(function(err) {
             console.log('Fetch Error: ', err);
         });
-}
+    }
+
+    function buildProfile() {
+        let req = {
+            id_user: localStorage.getItem('userId')
+        }
+
+        fetch('http://localhost:8080/?profile', {
+            method: 'POST', body: JSON.stringify(req),
+            headers:{ 'Content-Type': 'application/json' }
+        })
+        .then(
+            function(response) {
+                if (response.status !== 200) {
+                    console.log("NOT OK: "+response.status);
+                    return;
+                }
+                response.json().then((data)=>{
+                    let { nombre, apellido, email } = data.body[0];
+                    qS('.user').innerHTML = localStorage.getItem('username')
+                    F('profile').firstname.value = nombre;
+                    F('profile').lastname.value = apellido;
+                    qS('.email').innerHTML = email;
+                })    
+            }
+        )
+        .catch(function(err) {
+            console.log('Fetch Error: ', err);
+        });
+    }
+
 
     jQ("buttonRegister").addEventListener(Event.CLICK, register);
     jQ("buttonChat").addEventListener(Event.CLICK, submitFeed);
@@ -118,6 +151,19 @@ window.onload = function() {
     qS(".go-chat",true).forEach( e => e.addEventListener(Event.CLICK, goChat) );
     qS(".go-register",true).forEach(e => e.addEventListener(Event.CLICK, goRegister));
 
+    function goProfile() {
+        jQ(Scene.CHATFEED).style.display = 'none';
+        jQ(Scene.USERLIST).style.display = 'none';
+        jQ(Scene.PROFILE).style.display = 'block';
+        buildProfile()
+    }
+    function goUserlist() {
+        jQ(Scene.CHATFEED).style.display = 'none';
+        jQ(Scene.PROFILE).style.display = 'none';
+        jQ(Scene.USERLIST).style.display = 'block';
+        buildList();
+    }
+    
     function goChat() {
         jQ(Scene.LOGIN).style.display = "none";
         jQ(Scene.PROFILE).style.display = "none";

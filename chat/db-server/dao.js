@@ -31,8 +31,9 @@ const server = http.createServer( (req,res) => {
         serviceStrategy.set('connect', QUERY.connect.bind(this,r.id));
         serviceStrategy.set('disconnect', QUERY.disconnect.bind(this,r.id));
         serviceStrategy.set('feed', QUERY.MESSAGES.NEW.bind(this,r.id_user,r.message,1));
-        serviceStrategy.set('profile', QUERY.USERS.EDIT.bind(this,r.user,r.firstname,r.lastname));
-        serviceStrategy.set('userlist', () => QUERY.getUsers);
+        serviceStrategy.set('profile', QUERY.USERS.GET.bind(this,r.id_user));
+        serviceStrategy.set('editProfile', QUERY.USERS.EDIT.bind(this,r.user,r.firstname,r.lastname));
+        serviceStrategy.set('userlist', QUERY.getUsers.bind(this,r.all));
         let query = serviceStrategy.get(getSecuredRoute(req))();
         
         con.query(query, (err,result,fields) => {

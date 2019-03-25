@@ -1,7 +1,8 @@
 <container class="view" id="chatprofile">
     <header>
+        <button type="button" class="go-chat fas">&#xf075;</button>
         <button type="button" class="go-userlist">&#9742;</button>
-        <button type="button" class="go-profile">&#9776;</button>
+        <button type="button" class="go">&#9776;</button>
         <h2>Mi perfil</h2>
     </header>
     <form action="/profile" method="post" name="profile" id="profile">
@@ -13,6 +14,9 @@
         </label>
         <label for="apellido">Apellido
             <input name="lastname" type="text" maxlength="16"/>
+        </label>
+        <label for="apellido">Email
+            <span class="email"></span>
         </label>
         <label for="actions">
             <button type="submit" form="profile" id="buttonEditProfile">Editar</button>
