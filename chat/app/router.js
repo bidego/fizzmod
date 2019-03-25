@@ -11,16 +11,16 @@ module.exports = (req,res) => {
     }
 
     function fetchFile(r) {
-        let file = fs.createReadStream(__dirname + "/" + r.path);
+        let file = fs.createReadStream(__dirname + "/front/" + r.path);
         res.writeHead(Status.OK.code,headers(r.type))
         file.pipe(res);    
     }
 
     function renderHtml(Route) {
-        fs.readFile(__dirname + '/' + Route.path, 'utf8', async function(err, html){
+        fs.readFile(__dirname + '/front/' + Route.path, 'utf8', async function(err, html){
             let out = html;
             for ( let child of Route.childs) {
-                let childHtml = fs.readFileSync(__dirname + '/' + child.path, 'utf8');
+                let childHtml = fs.readFileSync(__dirname + '/front/' + child.path, 'utf8');
                 out = out.replace(child.selector,childHtml)
             }
             res.writeHead(Status.OK.code,headers(Route.type))
