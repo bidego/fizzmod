@@ -5,6 +5,7 @@ window.onload = function() {
     const qS = function(q,all) { return all ? document.querySelectorAll(q) : document.querySelector(q) }
     const eL = function(el) { return document.createElement(el) }
     const F = function(name) { return document.forms[name] }
+    
     const AppConfig = {
         SOCKET_URL: "http://localhost:8080"
     }
@@ -24,14 +25,7 @@ window.onload = function() {
     socket.on(Event.CONNECT, function() {
         //socket.send('hi');
     })
-    socket.on(Event.DISCONNECT, function() {
-        let userId = localStorage.getItem('userId');
-        let username = localStorage.getItem('username');
-        let msg = F('messageform').message.value
-        socket.emit("message",userId,username,msg, function(data) {
-            console.log(data);
-        })
-    })
+
     socket.on(Event.USER_IN, function(data) {
         console.log("se conectó un")
     })
