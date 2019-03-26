@@ -14,6 +14,11 @@ button:focus {
     background-color: #ccc;
     color:#111;
 }
+.error-message {
+    font-size: 12px;
+    color: red;
+    font-weight: bold;
+}
 .view header {
     width:100%;
     text-align: center;

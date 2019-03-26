@@ -204,7 +204,7 @@ window.onload = function() {
                         return;
                     }
                     response.json().then((data)=>{
-                        if (data.body.length > 0) {
+                        if (data.status == 'OK' && data.body.length > 0) {
                             let { id: userId, nombre_de_usuario: username } = data.body[0];
                             localStorage.setItem("userId",userId)
                             localStorage.setItem("username",username)
@@ -212,6 +212,9 @@ window.onload = function() {
                             socket.emit("login",userId,username, function(data) {
                                 console.log(data);
                             })
+                        } else {
+                            qS('#chatlogin .error-message').innerHTML = data.message;
+                            setTimeout(function() { qS('#chatlogin .error-message').innerHTML = ''},3000)
                         }
                     })    
                 }

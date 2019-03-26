@@ -25,6 +25,8 @@ const server = http.createServer( (req,res) => {
             console.log(e)
         }
 
+        r = preventSQLInjection(r);
+
         let serviceStrategy = new Map();
         serviceStrategy.set('register', QUERY.USERS.ADD.bind(this,r.user,r.firstname,r.lastname,r.email,2));
         serviceStrategy.set('login', QUERY.login.bind(this,r.user,r.email));
@@ -65,4 +67,10 @@ function getSecuredRoute(req) {
         u = u.split("?")[1];
     }
     return u;
+}
+//In progress
+function preventSQLInjection(r) {
+    Object.keys(r).forEach( e => {
+        console.log(e);
+    })
 }

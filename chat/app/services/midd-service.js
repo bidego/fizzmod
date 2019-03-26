@@ -49,7 +49,10 @@ module.exports = function(req,res,io) {
                     httpreq.write(JSON.stringify({id: body[0].id}));
                     httpreq.end();
                     res.writeHead(Status.OK.code, { "content-type": "application/json"})
-                    res.end( JSON.stringify({ body: JSON.parse(data.toString('utf8')) }) )
+                    res.end( JSON.stringify({ status: "OK", body: JSON.parse(data.toString('utf8')) }) )
+                } else {
+                    res.writeHead(Status.OK.code, { "content-type": "application/json"})
+                    res.end( JSON.stringify({status: "ERROR", message:"Credenciales invalidas"}) )
                 }
             }
             r.on(Evt.ERROR, reject);
