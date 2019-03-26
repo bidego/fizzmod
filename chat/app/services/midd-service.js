@@ -1,5 +1,5 @@
 const { Status, Evt } = require('../enums/')
-const { Endpoints } = require('../');
+const { Endpoints } = require('../endpoints');
 
 module.exports = {
     
