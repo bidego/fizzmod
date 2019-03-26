@@ -3,6 +3,7 @@ module.exports = {
     Endpoints: {
         appJs: { path: "scripts/app.js", type: ContentType.JS },
         stylesCss: { path: "views/styles.css", type: ContentType.CSS },
+        loginCss: { path: "views/login.css", type: ContentType.CSS },
         feedCss: { path: "views/feed.css", type: ContentType.CSS },
         userlistCss: { path: "views/userlist.css", type: ContentType.CSS },
         indexHtml: { path: "views/index.html", type: ContentType.HTML, childs: [

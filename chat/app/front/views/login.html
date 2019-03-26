@@ -6,11 +6,11 @@
     <form action="/login" method="post" name="login" id="login">
         <label for="email">
             Email
-            <input name="email" type="text" maxlength="128"/>
+            <input name="email" type="text" maxlength="256" required/>
         </label>
         <label for="user">
             Usuario
-            <input name="user" type="text" maxlength="16"/>
+            <input name="user" type="text" maxlength="16" required/>
         </label>
         <label for="actions">
             <button type="submit" form="login" id="buttonEnter">Entrar</button>

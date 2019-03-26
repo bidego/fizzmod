@@ -179,37 +179,47 @@ window.onload = function() {
         jQ(Scene.LOGIN).style.display = 'block';
         jQ(Scene.REGISTER).style.display = 'none';
     }
+
+    function hasError(event){
+        event.target.className ='input-error';
+        setTimeout(function() {
+            event.target.className ='input';
+        },3000)
+    }
+
     function login(event) {
         event.preventDefault();
         let data = { user: F('login').user.value }
-        fetch('http://localhost:8080/?login', {
-            method: 'POST', body: JSON.stringify(data),
-            headers:{
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(
-            function(response) {
-                if (response.status !== 200) {
-                    console.log("NOT OK: "+response.status);
-                    return;
+        if (F('login').checkValidity()) {
+            fetch('http://localhost:8080/?login', {
+                method: 'POST', body: JSON.stringify(data),
+                headers:{
+                    'Content-Type': 'application/json'
                 }
-                response.json().then((data)=>{
-                    if (data.body.length > 0) {
-                        let { id: userId, nombre_de_usuario: username } = data.body[0];
-                        localStorage.setItem("userId",userId)
-                        localStorage.setItem("username",username)
-                        goChat();
-                        socket.emit("login",userId,username, function(data) {
-                            console.log(data);
-                        })
+            })
+            .then(
+                function(response) {
+                    if (response.status !== 200) {
+                        console.log("NOT OK: "+response.status);
+                        return;
                     }
-                })    
-            }
-        )
-        .catch(function(err) {
-            console.log('Fetch Error: ', err);
-        });
+                    response.json().then((data)=>{
+                        if (data.body.length > 0) {
+                            let { id: userId, nombre_de_usuario: username } = data.body[0];
+                            localStorage.setItem("userId",userId)
+                            localStorage.setItem("username",username)
+                            goChat();
+                            socket.emit("login",userId,username, function(data) {
+                                console.log(data);
+                            })
+                        }
+                    })    
+                }
+            )
+            .catch(function(err) {
+                console.log('Fetch Error: ', err);
+            });
+        }
     }
     function register(event) {
         event.preventDefault();
@@ -249,8 +259,6 @@ window.onload = function() {
             .catch(function(err) {
                 console.log('Fetch Error:', err);
             });
-        } else {
-            console.log("Form invalid")
         }
     }
     function editProfile(event) {
@@ -298,5 +306,11 @@ window.onload = function() {
 
     function initialize() {
         jQ('chatregister').style.display = 'block';
+        F('register').firstname.addEventListener('invalid', hasError);
+        F('register').lastname.addEventListener('invalid', hasError);
+        F('register').user.addEventListener('invalid', hasError);
+        F('register').email.addEventListener('invalid', hasError);
+        F('login').user.addEventListener('invalid', hasError);
+        F('login').email.addEventListener('invalid', hasError);
     }
 }
