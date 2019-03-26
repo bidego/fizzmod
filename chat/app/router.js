@@ -44,9 +44,9 @@ module.exports = (req,res) => {
             let endpoint = Endpoints[name+Ext] || { path: req.url, type: ContentType[ext]};
             fetchFile(endpoint);
         } catch(e) {
-            let route = req.url.split("?")[1].split("=")[0]
+            let route = /[?]/g.test(req.url) ? req.url.split("?")[1].split("=")[0] : req.url;
             if (!MiddRoutes.includes(route)) {
-                console.log('path not found. ' +req.url+ 'timeout 404')
+                console.log('path not found: "' +req.url+ '". error 404')
                 setTimeout(function() {
                     res.writeHead(Status.NO_PAGE.code,headers(ContentType.JSON))
                     fetchFile(Endpoints.NO_PAGE);
