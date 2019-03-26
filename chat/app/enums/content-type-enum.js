@@ -4,6 +4,8 @@ module.exports = {
         CSS: "text/css",
         PLAIN: "text/plain",
         JS: "application/javascript",
-        JSON: "application/json"
+        JSON: "application/json",
+        'jpg': "image/jpeg",
+        'jpeg': "image/jpeg"
     }
 }
