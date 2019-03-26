@@ -7,7 +7,7 @@
     </header>
     <form action="/profile" method="post" name="profile" id="profile">
         <label for="user">Usuario
-            <strong class="user"></strong>
+            <input name="user" type="text" maxlength="16" disabled="disabled" />
         </label>
         <label for="nombre">Nombre
             <input name="firstname" type="text" maxlength="16"/>
@@ -15,8 +15,8 @@
         <label for="apellido">Apellido
             <input name="lastname" type="text" maxlength="16"/>
         </label>
-        <label for="apellido">Email
-            <span class="email"></span>
+        <label for="email">Email
+            <input name="email" type="text" maxlength="16" disabled="disabled" />
         </label>
         <label for="actions">
             <button type="submit" form="profile" id="buttonEditProfile">Editar</button>

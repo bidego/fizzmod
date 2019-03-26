@@ -130,10 +130,10 @@ window.onload = function() {
                 }
                 response.json().then((data)=>{
                     let { nombre, apellido, email } = data.body[0];
-                    qS('.user').innerHTML = localStorage.getItem('username')
+                    F('profile').user.value = localStorage.getItem('username')
                     F('profile').firstname.value = nombre;
                     F('profile').lastname.value = apellido;
-                    qS('.email').innerHTML = email;
+                    F('profile').email.value = email;
                 })    
             }
         )

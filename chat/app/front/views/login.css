@@ -1,3 +1,5 @@
 .input-error {
+    -webkit-transition: width 0.4s ease-in-out;
     border-color: red !important;
 }
+    
