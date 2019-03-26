@@ -68,9 +68,10 @@ function getSecuredRoute(req) {
     }
     return u;
 }
-//In progress
 function preventSQLInjection(r) {
     Object.keys(r).forEach( e => {
-        console.log(e);
+        r[e] = r[e].replace(/['"]/g,"");
+        console.log(r[e])
     })
+    return r;
 }
