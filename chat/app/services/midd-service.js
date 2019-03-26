@@ -1,7 +1,9 @@
 const { Status, Evt } = require('../enums/')
+const { Endpoints } = require('../endpoints');
+
 module.exports = {
     
-    routes: [ 'register', 'login', 'profile', 'userlist'],
+    routes: Object.keys(Endpoints.MIDD).map(k=>Endpoints.MIDD[k]),
     
     get: function(req,res,io) {
 

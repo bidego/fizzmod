@@ -5,9 +5,9 @@ window.onload = function() {
     const qS = function(q,all) { return all ? document.querySelectorAll(q) : document.querySelector(q) }
     const eL = function(el) { return document.createElement(el) }
     const F = function(name) { return document.forms[name] }
-    
+
     const AppConfig = {
-        SOCKET_URL: "http://localhost:8080"
+        SOCKET_URL: "http://"+window.location.hostname+":8080"
     }
     const Event = {
         CONNECT: 'connect',
@@ -41,7 +41,7 @@ window.onload = function() {
     const digest = function(data) {
         let { userId, username, msg } = data;
         let feed = eL('li');
-        feed.innerHTML = username +": "+ msg;
+        feed.innerText = username +": "+ msg;
         feed.style.paddingRight = '20px';
         if (username.match(localStorage.getItem('username'))) {
             feed.className = 'user';
@@ -83,7 +83,7 @@ window.onload = function() {
             all: all
         }
 
-        fetch('http://localhost:8080/?userlist', {
+        fetch(AppConfig.SOCKET_URL+'/?userlist', {
             method: 'POST', body: JSON.stringify(req),
             headers:{ 'Content-Type': 'application/json' }
         })
@@ -118,7 +118,7 @@ window.onload = function() {
             id_user: localStorage.getItem('userId')
         }
 
-        fetch('http://localhost:8080/?profile', {
+        fetch(AppConfig.SOCKET_URL+'/?profile', {
             method: 'POST', body: JSON.stringify(req),
             headers:{ 'Content-Type': 'application/json' }
         })
@@ -190,8 +190,9 @@ window.onload = function() {
     function login(event) {
         event.preventDefault();
         let data = { user: F('login').user.value, email: F('login').email.value }
+        console.log(data)
         if (F('login').checkValidity()) {
-            fetch('http://localhost:8080/?login', {
+            fetch(AppConfig.SOCKET_URL+'/?login', {
                 method: 'POST', body: JSON.stringify(data),
                 headers:{
                     'Content-Type': 'application/json'
@@ -234,7 +235,7 @@ window.onload = function() {
                 user: input.user.value,
                 email: input.email.value
             }
-            fetch('http://localhost:8080/?register', {
+            fetch(AppConfig.SOCKET_URL+'/?register', {
                 method: 'POST', body: JSON.stringify(data),
                 headers:{
                     'Content-Type': 'application/json'
@@ -271,7 +272,7 @@ window.onload = function() {
             firstname: F('profile').firstname.value,
             lastname: F('profile').lastname.value
         }
-        fetch('http://localhost:8080/?profile', {
+        fetch(AppConfig.SOCKET_URL+':8080/?profile', {
             method: 'POST', body: JSON.stringify(data),
             headers:{
                 'Content-Type': 'application/json'

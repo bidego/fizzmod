@@ -17,6 +17,12 @@ module.exports = {
         },
         NO_PAGE: {
             path: "views/no_page.html", type: ContentType.HTML
+        },
+        MIDD: {
+            PROFILE: 'profile',
+            REGISTER: 'register',
+            LOGIN: 'login',
+            USERLIST: 'userlist'
         }
     },
     get Endpoints() {

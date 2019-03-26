@@ -7,7 +7,7 @@ const QUERY = require("./procedures")
 
 const con = mysql.createConnection({
   host: "localhost",
-  user: "root",
+  user: "chat",
   password: "qwerty89",
   database: "chat_fizzmod"
 });
