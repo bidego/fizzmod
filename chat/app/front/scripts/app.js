@@ -213,40 +213,45 @@ window.onload = function() {
     }
     function register(event) {
         event.preventDefault();
-        let input = F('register');
-        let data = { firstname: input.firstname.value,
-            lastname: input.lastname.value,
-            user: input.user.value,
-            email: input.email.value
-        }
-        fetch('http://localhost:8080/?register', {
-            method: 'POST', body: JSON.stringify(data),
-            headers:{
-                'Content-Type': 'application/json'
+        let formvalid = F('register').checkValidity()
+        if(formvalid) {
+            let input = F('register');
+            let data = { firstname: input.firstname.value,
+                lastname: input.lastname.value,
+                user: input.user.value,
+                email: input.email.value
             }
-        })
-        .then(
-            function(response) {
-                if (response.status !== 200) {
-                    console.log('Error: ' +
-                    response.status);
-                    return;
+            fetch('http://localhost:8080/?register', {
+                method: 'POST', body: JSON.stringify(data),
+                headers:{
+                    'Content-Type': 'application/json'
                 }
-                response.json().then(function(r) {
-                    jQ(Scene.REGISTER).style.display = "none";
-                    jQ(Scene.CHATFEED).style.display = "block";
-                    localStorage.setItem('userId',r.body.insertId)
-                    localStorage.setItem('username',data.user)
-                    F('login').user.value = data.user;
-                    F('login').email.value = data.email;
-                    F('profile').firstname.value = data.firstname;
-                    F('profile').lastname.value = data.lastname;
-                });
-            }
-        )
-        .catch(function(err) {
-            console.log('Fetch Error:', err);
-        });
+            })
+            .then(
+                function(response) {
+                    if (response.status !== 200) {
+                        console.log('Error: ' +
+                        response.status);
+                        return;
+                    }
+                    response.json().then(function(r) {
+                        jQ(Scene.REGISTER).style.display = "none";
+                        jQ(Scene.CHATFEED).style.display = "block";
+                        localStorage.setItem('userId',r.body.insertId)
+                        localStorage.setItem('username',data.user)
+                        F('login').user.value = data.user;
+                        F('login').email.value = data.email;
+                        F('profile').firstname.value = data.firstname;
+                        F('profile').lastname.value = data.lastname;
+                    });
+                }
+            )
+            .catch(function(err) {
+                console.log('Fetch Error:', err);
+            });
+        } else {
+            console.log("Form invalid")
+        }
     }
     function editProfile(event) {
         event.preventDefault();
@@ -288,6 +293,7 @@ window.onload = function() {
             console.log(data);
         })
         digest({ userId: userId, username: username, msg: msg})
+        F('messageform').message.value = "";
     }
 
     function initialize() {

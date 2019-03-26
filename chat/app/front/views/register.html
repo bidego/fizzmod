@@ -6,19 +6,19 @@
     <form action="/register" method="post" name="register" id="register">
         <label for="firstname">
             Nombre
-            <input name="firstname" type="text" maxlength="16"/>
+            <input name="firstname" type="text" maxlength="16" required/>
         </label>
         <label for="lastname">
             Apellido
-            <input name="lastname" type="text" maxlength="16"/>
+            <input name="lastname" type="text" maxlength="16" required/>
         </label>
         <label for="user">
             Usuario
-            <input name="user" type="text" maxlength="16"/>
+            <input name="user" type="text" maxlength="16" required/>
         </label>
         <label for="email">
             Email
-            <input name="email" type="text" maxlength="16"/>
+            <input name="email" type="text" maxlength="16" required/>
         </label>
         <label for="actions">
             <button type="submit" form="register" id="buttonRegister">Registrar</button>

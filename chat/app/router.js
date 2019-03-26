@@ -33,16 +33,24 @@ module.exports = (req,res) => {
     };
 
     let noPage = function() {
-        setTimeout(function() {
-            res.writeHead(Status.NO_PAGE.code,headers(ContentType.JSON))
-            res.end("ERROR");
-        },5000);
+        let url = req.url.slice(1,req.url.length);
+        let arr = url.split(".");
+        let name = arr[0];
+        let ext = arr[1]
+        try {
+            ext = ext[0].toUpperCase() + ext.slice(1,ext.length)
+            let endpoint = Endpoints[name+ext];
+            fetchFile(endpoint);
+        } catch(e) {
+            setTimeout(function() {
+                res.writeHead(Status.NO_PAGE.code,headers(ContentType.JSON))
+                res.end("ERROR: " + e);
+            },5000);
+        }
     }
 
     let routes = new Map();
     routes.set('/app.js', Endpoints.appJs )
-    routes.set('/styles.css', Endpoints.stylesCss )
-    routes.set('/index.html', index)
     routes.set('/', index)
     let route = routes.get(req.url)
     

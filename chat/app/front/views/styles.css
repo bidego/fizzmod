@@ -7,33 +7,6 @@ body {
 body::-webkit-scrollbar {
     width: 1em;
 }
-#userlist ul {
-    list-style: none;
-}
-#userlist ul li {
-    cursor: pointer; 
-}
-#userlist ul li::before {
-    padding-right:5px;
-    content: "\2022";
-    font-weight: bold;
-    display: inline-block; 
-    width: 1em;
-    margin-left: -1em;
-}
-#userlist ul li:hover::after {
-    content: " "attr(tooltip);
-}
-#userlist ul li.ONLINE::before {
-    color: green;
-}
-#userlist ul li.OFFLINE::before {
-    color: red;
-}
-#userlist ul li.OFFLINE {
-    color: #999;
-}
-
 button:focus {
     outline:none
 }
@@ -76,44 +49,7 @@ button:focus {
     border-bottom: 2px solid #444;
     border-radius: 30px;
 }
-#chatfeed {
-    list-style: none;
-}
-#chatview textarea {
-    width:70%;
-}
-#chatview li.user {
-    float:right;
-    text-align: right;
-}
-#chatview li.nouser {
-    float: left;
-    text-align: left;
-}
-#chatview li {
-    width:70%;
-    font-size:12px;
-    margin:5px;
-    padding:5px;
-    background-color: #eee;
-    border-radius:5px;
-}
 
-#userlist container {
-    height:400px;
-    overflow-y:auto;
-    overflow-x: hidden;
-    display:block;
-}
-
-#fetchConnected {
-    display:none
-}
-#feedwindow {
-    height:370px;
-    overflow:auto;
-    display:block;
-}
 button {
     color: white;
     background-color: blue;

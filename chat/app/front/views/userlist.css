@@ -1,0 +1,37 @@
+#userlist ul {
+    list-style: none;
+}
+#userlist ul li {
+    cursor: pointer; 
+}
+#userlist ul li::before {
+    padding-right:5px;
+    content: "\2022";
+    font-weight: bold;
+    display: inline-block; 
+    width: 1em;
+    margin-left: -1em;
+}
+#userlist ul li:hover::after {
+    content: " "attr(tooltip);
+}
+#userlist ul li.ONLINE::before {
+    color: green;
+}
+#userlist ul li.OFFLINE::before {
+    color: red;
+}
+#userlist ul li.OFFLINE {
+    color: #999;
+}
+
+#userlist container {
+    height:400px;
+    overflow-y:auto;
+    overflow-x: hidden;
+    display:block;
+}
+
+#fetchConnected {
+    display:none
+}
