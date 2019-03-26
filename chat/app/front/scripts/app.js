@@ -189,7 +189,7 @@ window.onload = function() {
 
     function login(event) {
         event.preventDefault();
-        let data = { user: F('login').user.value }
+        let data = { user: F('login').user.value, email: F('login').email.value }
         if (F('login').checkValidity()) {
             fetch('http://localhost:8080/?login', {
                 method: 'POST', body: JSON.stringify(data),

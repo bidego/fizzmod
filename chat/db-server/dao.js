@@ -27,7 +27,7 @@ const server = http.createServer( (req,res) => {
 
         let serviceStrategy = new Map();
         serviceStrategy.set('register', QUERY.USERS.ADD.bind(this,r.user,r.firstname,r.lastname,r.email,2));
-        serviceStrategy.set('login', QUERY.login.bind(this,r.user));
+        serviceStrategy.set('login', QUERY.login.bind(this,r.user,r.email));
         serviceStrategy.set('connect', QUERY.connect.bind(this,r.id));
         serviceStrategy.set('disconnect', QUERY.disconnect.bind(this,r.id));
         serviceStrategy.set('feed', QUERY.MESSAGES.NEW.bind(this,r.id_user,r.message,1));

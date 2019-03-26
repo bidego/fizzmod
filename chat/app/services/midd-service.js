@@ -28,7 +28,8 @@ module.exports = function(req,res,io) {
         }
         function login(){
             let dataEncoded = JSON.stringify({
-                user: body.user
+                user: body.user,
+                email: body.email
             })
         
             let httpreq = HttpService.login(dataEncoded,loginOK);
