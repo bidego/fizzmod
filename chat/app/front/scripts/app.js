@@ -252,11 +252,10 @@ window.onload = function() {
                         jQ(Scene.CHATFEED).style.display = "block";
                         localStorage.setItem('userId',r.body.insertId)
                         localStorage.setItem('username',data.user)
-                        F('login').user.value = data.user;
-                        F('login').email.value = data.email;
-                        F('profile').firstname.value = data.firstname;
-                        F('profile').lastname.value = data.lastname;
-                    });
+                        socket.emit("login",r.body.insertId,data.user, function(data) {
+                            console.log(data);
+                        })
+                });
                 }
             )
             .catch(function(err) {
