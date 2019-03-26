@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { ContentType, Status } = require('./enums')
 const { Endpoints } = require('./endpoints')
-
+const Terser = require('terser');
 module.exports = (req,res) => {    
     const { routes:MiddRoutes } = require('./').MiddService;
     let headers = (type) => { return {
@@ -13,14 +13,16 @@ module.exports = (req,res) => {
 
     function fetchFile(r) {
         let file = fs.createReadStream(__dirname + "/front/" + r.path);
+        file.on('error', function() {});
         console.log(`serving ${r.path}...`)
         res.writeHead(Status.OK.code,headers(r.type))
-        file.pipe(res);    
+        file.pipe(res);
     }
 
     function renderHtml(Route) {
         fs.readFile(__dirname + '/front/' + Route.path, 'utf8', async function(err, html){
             let out = html;
+            console.log(Route)
             for ( let child of Route.childs) {
                 let childHtml = fs.readFileSync(__dirname + '/front/' + child.path, 'utf8');
                 out = out.replace(child.selector,childHtml)
@@ -32,6 +34,14 @@ module.exports = (req,res) => {
 
     let index = function() {
         renderHtml(Endpoints.indexHtml);
+    };
+
+    let scrubJs = function() {
+        fs.readFile(__dirname + '/front/' + Endpoints.appJs.path, 'utf8', async function(err, js){
+            let out = Terser.minify(js).code;
+            res.writeHead(Status.OK.code,headers(Endpoints.appJs.type))
+            res.end(out);
+        });
     };
 
     let checkEndpoints = function() {
@@ -56,13 +66,13 @@ module.exports = (req,res) => {
     }
 
     let virtualHost = new Map();
-    virtualHost.set('/app.js', Endpoints.appJs )
-    virtualHost.set('/descargaApp.js', Endpoints.appJs)
+    virtualHost.set('/app.js', scrubJs )
+    virtualHost.set('/donwloadApp.js', Endpoints.appJs)
     virtualHost.set('/', index)
     virtualHost.set('/superChat', index)
 
     let route = virtualHost.get(req.url)
-    
+
     let getRoute = new Map()
     .set('object', function() { fetchFile(route) } ) // virtual route
     .set('function', route )                         // virtual route function
