@@ -23,6 +23,12 @@ module.exports = {
             REGISTER: 'register',
             LOGIN: 'login',
             USERLIST: 'userlist'
+        },
+        SOCKET: {
+            LOGIN: 'login',
+            CONNECT: 'connect',
+            DISCONNECT: 'disconnect',
+            FEED: 'feed'
         }
     },
     get Endpoints() {

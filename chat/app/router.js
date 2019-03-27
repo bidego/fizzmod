@@ -67,18 +67,18 @@ module.exports = (req,res) => {
 
     let virtualHost = new Map();
     virtualHost.set('/app.js', scrubJs )
-    virtualHost.set('/donwloadApp.js', Endpoints.appJs)
+    virtualHost.set('/downloadApp.js', Endpoints.appJs)
     virtualHost.set('/', index)
     virtualHost.set('/superChat', index)
 
     let route = virtualHost.get(req.url)
 
-    let getRoute = new Map()
+    let virtualStrategy = new Map()
     .set('object', function() { fetchFile(route) } ) // virtual route
     .set('function', route )                         // virtual route function
-    .set('undefined', checkEndpoints )
-    let callback = getRoute.get(typeof route)
 
-    if (typeof callback === 'function')
-        callback();
+    let cb = !virtualStrategy.has(typeof route) ? checkEndpoints : virtualStrategy.get(typeof route)
+
+    if (typeof cb === 'function')
+        cb();
 }

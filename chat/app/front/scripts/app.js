@@ -272,7 +272,7 @@ window.onload = function() {
             firstname: F('profile').firstname.value,
             lastname: F('profile').lastname.value
         }
-        fetch(AppConfig.SOCKET_URL+':8080/?profile', {
+        fetch(AppConfig.SOCKET_URL+'/?profile', {
             method: 'POST', body: JSON.stringify(data),
             headers:{
                 'Content-Type': 'application/json'
