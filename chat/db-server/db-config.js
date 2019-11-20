@@ -3,7 +3,7 @@ module.exports = {
         CONNECTION: {
             host: "localhost",
             user: "root",
-            password: "qwerty89",
+            password: "password",
             database: "chat_fizzmod"
         }
     }

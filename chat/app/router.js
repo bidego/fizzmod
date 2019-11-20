@@ -22,7 +22,7 @@ module.exports = (req,res) => {
     function renderHtml(Route) {
         fs.readFile(__dirname + '/front/' + Route.path, 'utf8', async function(err, html){
             let out = html;
-            console.log(Route)
+            console.log('rendering index...')
             for ( let child of Route.childs) {
                 let childHtml = fs.readFileSync(__dirname + '/front/' + child.path, 'utf8');
                 out = out.replace(child.selector,childHtml)

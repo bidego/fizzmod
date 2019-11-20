@@ -1,11 +1,8 @@
-window.onload = function() {
-    if (typeof fetch !== 'function') alert("Navegador incompatible");
-
+(function() {
     const jQ = function(id) { return document.getElementById(id) }
     const qS = function(q,all) { return all ? document.querySelectorAll(q) : document.querySelector(q) }
     const eL = function(el) { return document.createElement(el) }
     const F = function(name) { return document.forms[name] }
-
     const AppConfig = {
         SOCKET_URL: "http://"+window.location.hostname+":8080"
     }
@@ -17,27 +14,62 @@ window.onload = function() {
         CLICK: 'click',
         NOTIFY_USER_LIST: 'notify_user_list'
     }
-
+    const Scene = {
+        LOGIN: 'chatlogin',
+        REGISTER: 'chatregister',
+        CHATFEED: 'chatview',
+        PROFILE: 'chatprofile',
+        USERLIST: 'userlist'
+    }
     const socket = io(AppConfig.SOCKET_URL)        
-
-    initialize()
-
-    socket.on(Event.CONNECT, function() {
-        //socket.send('hi');
-    })
-
-    socket.on(Event.USER_IN, function(data) {
-        console.log("se conectó un")
-    })
-
-    socket.on(Event.NOTIFY_USER_LIST, function(data) {
-        if ( data.body.notify ) buildList();
-    })
-
-    socket.on(Event.NEW_MESSAGE, function(data) {
-        digest(data.body.feed);
-    })
-
+    
+    window.onload = function() {
+        if (typeof fetch !== 'function') alert("Navegador incompatible");
+    
+        initialize()
+    
+        socket.on(Event.CONNECT, function() {
+            //socket.send('hi');
+        })
+    
+        socket.on(Event.USER_IN, function(data) {
+            console.log("se conectó un")
+        })
+    
+        socket.on(Event.NOTIFY_USER_LIST, function(data) {
+            if ( data.body.notify ) buildList();
+        })
+    
+        socket.on(Event.NEW_MESSAGE, function(data) {
+            digest(data.body.feed);
+        })
+    
+        
+        qS(".go-profile",true).forEach(e => e.addEventListener(Event.CLICK, goProfile));
+        
+        qS(".go-userlist",true).forEach(e => e.addEventListener(Event.CLICK, goUserlist));
+        
+        qS("#userlist #fetchAll").addEventListener(Event.CLICK, function() {
+            buildList(true);
+            qS("#userlist #fetchAll").style.display = 'none';
+            qS("#userlist #fetchConnected").style.display = 'block'
+        })
+        
+        qS("#userlist #fetchConnected").addEventListener(Event.CLICK, function() {
+            buildList();
+            qS("#userlist #fetchAll").style.display = 'block';
+            qS("#userlist #fetchConnected").style.display = 'none'
+        })
+        
+        jQ("buttonRegister").addEventListener(Event.CLICK, register);
+        jQ("buttonChat").addEventListener(Event.CLICK, submitFeed);
+        jQ("buttonEnter").addEventListener(Event.CLICK, login);
+        jQ("buttonEditProfile").addEventListener(Event.CLICK, editProfile);
+        qS(".go-login",true).forEach( e => e.addEventListener(Event.CLICK, goLogin) );
+        qS(".go-chat",true).forEach( e => e.addEventListener(Event.CLICK, goChat) );
+        qS(".go-register",true).forEach(e => e.addEventListener(Event.CLICK, goRegister));
+        
+    }
     const digest = function(data) {
         let { userId, username, msg } = data;
         let feed = eL('li');
@@ -52,31 +84,6 @@ window.onload = function() {
         jQ("feedwindow").scroll({top:jQ("feedwindow").scrollHeight, left:0,behavior: 'smooth' })
 
     }
-
-    const Scene = {
-        LOGIN: 'chatlogin',
-        REGISTER: 'chatregister',
-        CHATFEED: 'chatview',
-        PROFILE: 'chatprofile',
-        USERLIST: 'userlist'
-    }
-
-    
-    qS(".go-profile",true).forEach(e => e.addEventListener(Event.CLICK, goProfile));
-
-    qS(".go-userlist",true).forEach(e => e.addEventListener(Event.CLICK, goUserlist));
-
-    qS("#userlist #fetchAll").addEventListener(Event.CLICK, function() {
-        buildList(true);
-        qS("#userlist #fetchAll").style.display = 'none';
-        qS("#userlist #fetchConnected").style.display = 'block'
-    })
-
-    qS("#userlist #fetchConnected").addEventListener(Event.CLICK, function() {
-        buildList();
-        qS("#userlist #fetchAll").style.display = 'block';
-        qS("#userlist #fetchConnected").style.display = 'none'
-    })
     function buildList(all) {
         jQ('contacts').innerHTML = "";
         let req = {
@@ -112,7 +119,6 @@ window.onload = function() {
             console.log('Fetch Error: ', err);
         });
     }
-
     function buildProfile() {
         let req = {
             id_user: localStorage.getItem('userId')
@@ -141,16 +147,6 @@ window.onload = function() {
             console.log('Fetch Error: ', err);
         });
     }
-
-
-    jQ("buttonRegister").addEventListener(Event.CLICK, register);
-    jQ("buttonChat").addEventListener(Event.CLICK, submitFeed);
-    jQ("buttonEnter").addEventListener(Event.CLICK, login);
-    jQ("buttonEditProfile").addEventListener(Event.CLICK, editProfile);
-    qS(".go-login",true).forEach( e => e.addEventListener(Event.CLICK, goLogin) );
-    qS(".go-chat",true).forEach( e => e.addEventListener(Event.CLICK, goChat) );
-    qS(".go-register",true).forEach(e => e.addEventListener(Event.CLICK, goRegister));
-
     function goProfile() {
         jQ(Scene.CHATFEED).style.display = 'none';
         jQ(Scene.USERLIST).style.display = 'none';
@@ -300,13 +296,12 @@ window.onload = function() {
         let userId = localStorage.getItem('userId');
         let username = localStorage.getItem('username');
         let msg = F('messageform').message.value
-        socket.emit("message",userId,username,msg, function(data) {
+        socket.emit("message",{ userId: userId, username: username,message:msg }, function(data) {
             console.log(data);
         })
         digest({ userId: userId, username: username, msg: msg})
         F('messageform').message.value = "";
     }
-
     function initialize() {
         jQ('chatregister').style.display = 'block';
         F('register').firstname.addEventListener('invalid', hasError);
@@ -316,4 +311,4 @@ window.onload = function() {
         F('login').user.addEventListener('invalid', hasError);
         F('login').email.addEventListener('invalid', hasError);
     }
-}
+})()
