@@ -1,7 +1,7 @@
 module.exports = {
     APP: {
         host: 'localhost',
-        port: 8080
+        port: 8090
     },
     DAO: {
         host: 'localhost',
